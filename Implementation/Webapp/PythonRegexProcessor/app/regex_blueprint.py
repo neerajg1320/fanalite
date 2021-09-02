@@ -8,7 +8,7 @@ from app.plain.exceptions import InvalidParams
 from app.plain.debug_utils import debug_log
 
 
-rbapp = Blueprint('regex_blueprint', __name__)
+rbapp = Blueprint('regex_blueprint', __name__, url_prefix='/regex')
 
 
 regex_is_valid_schema = {
@@ -76,7 +76,7 @@ def handle_validation_error(error):
     return create_response(error=error.message)
 
 
-@rbapp.route('/regex/validate', methods=['POST'])
+@rbapp.route('/validate', methods=['POST'])
 def regex_isvalid_post():
     request_dict = get_validated_json(request, regex_is_valid_schema)
 
@@ -91,7 +91,7 @@ def regex_isvalid_post():
     return create_response(result=result)
 
 
-@rbapp.route('/regex/apply', methods=['POST'])
+@rbapp.route('/apply', methods=['POST'])
 def regex_apply():
     request_dict = get_validated_json(request, regex_apply_schema)
 
