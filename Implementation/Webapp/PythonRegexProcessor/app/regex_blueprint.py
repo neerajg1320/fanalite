@@ -3,9 +3,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 import json
 
-from app.regex import check_compile_regex, regex_apply_on_text
-from app.exceptions import InvalidParams
-from app.debug_utils import debug_log
+from app.plain.regex import check_compile_regex, regex_apply_on_text
+from app.plain.exceptions import InvalidParams
+from app.plain.debug_utils import debug_log
 
 
 rbapp = Blueprint('regex_blueprint', __name__)
