@@ -22,8 +22,8 @@ public class SpringbootApplication {
         SpringApplication.run(SpringbootApplication.class, args);
     }
 
-    @GetMapping("/hello")
-    public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
-        return String.format("Hello %s!", name);
+    @GetMapping("/info")
+    public String applicationInfo() {
+        return String.format("JavaRegexProcessor: Springboot Application");
     }
 }

@@ -27,19 +27,21 @@ public class RegexEngine {
         return getPattern(regexStr) != null;
     }
 
-    public static List<String> apply(String regexStr, String inputStr) {
+    public static MatchInfo apply(String regexStr, String inputStr) {
         Pattern p = getPattern(regexStr);
-        List<String> allMatches = null;
+        List<String> matches = null;
 
         if (p != null) {
             Matcher m = p.matcher(inputStr);
-            allMatches = new ArrayList<>();
+            matches = new ArrayList<>();
 
             while (m.find()) {
-                allMatches.add(m.group());
+                matches.add(m.group());
             }
         }
 
-        return allMatches;
+        int count = matches != null ? matches.size() : 0;
+        return new MatchInfo(count, matches);
+
     }
 }
