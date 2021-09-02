@@ -1,10 +1,10 @@
 from flask import Flask
-from regex_blueprint import rpapp
+from app.regex_blueprint import rbapp
 
 
 app = Flask(__name__)
 
-app.register_blueprint(rpapp)
+app.register_blueprint(rbapp)
 
 
 DEBUG = False

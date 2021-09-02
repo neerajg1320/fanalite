@@ -3,12 +3,12 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 import json
 
-from regex import check_compile_regex, regex_apply_on_text
-from exceptions import InvalidParams
-from debug_utils import debug_log
+from app.regex import check_compile_regex, regex_apply_on_text
+from app.exceptions import InvalidParams
+from app.debug_utils import debug_log
 
 
-rpapp = Blueprint('regex_blueprint', __name__)
+rbapp = Blueprint('regex_blueprint', __name__)
 
 
 regex_is_valid_schema = {
@@ -66,17 +66,17 @@ def create_response(result=None, error=None, status=None):
     return response
 
 
-@rpapp.errorhandler(InvalidParams)
+@rbapp.errorhandler(InvalidParams)
 def handle_invalid_params(error):
     return create_response(error=error.message)
 
 
-@rpapp.errorhandler(ValidationError)
+@rbapp.errorhandler(ValidationError)
 def handle_validation_error(error):
     return create_response(error=error.message)
 
 
-@rpapp.route('/regex/validate', methods=['POST'])
+@rbapp.route('/regex/validate', methods=['POST'])
 def regex_isvalid_post():
     request_dict = get_validated_json(request, regex_is_valid_schema)
 
@@ -91,7 +91,7 @@ def regex_isvalid_post():
     return create_response(result=result)
 
 
-@rpapp.route('/regex/apply', methods=['POST'])
+@rbapp.route('/regex/apply', methods=['POST'])
 def regex_apply():
     request_dict = get_validated_json(request, regex_apply_schema)
 
