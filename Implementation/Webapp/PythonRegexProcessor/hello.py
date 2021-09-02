@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
+import json
+
 from regex import check_compile_regex, regex_apply_on_text
 from exceptions import InvalidParams
 from debug_utils import debug_log
-from jsonschema import validate
-
-import json
 
 
 app = Flask(__name__)
@@ -15,6 +16,17 @@ DEBUG = False
 @app.route("/info")
 def hello_world():
     return "PythonRegexProcessor: Flask Application"
+
+
+regex_is_valid_schema = {
+    'type': 'object',
+    'properties': {
+        'name': { 'type': 'string' },
+        'regex': { 'type': 'string' },
+        'flags': { 'type': 'object' }
+    },
+    'required': ['regex']
+}
 
 regex_apply_schema = {
     'type': 'object',
@@ -59,14 +71,19 @@ def create_response(result=None, error=None, status=None):
     return response
 
 
+@app.errorhandler(InvalidParams)
+def handle_invalid_params(error):
+    return create_response(error=error.message)
+
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return create_response(error=error.message)
+
+
 @app.route('/regex/validate', methods=['POST'])
 def regex_isvalid_post():
-    request_data = request.get_data().decode('utf-8')
-
-    try:
-        request_dict = json.loads(request_data, strict=False)
-    except json.decoder.JSONDecodeError as e:
-        raise InvalidParams(str(e))
+    request_dict = get_validated_json(request, regex_is_valid_schema)
 
     _, regex_error = check_compile_regex(request_dict["regex"])
 
