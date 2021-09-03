@@ -1,7 +1,7 @@
 package com.example.regexapp.regexController;
 
 import com.example.regexapp.LogSimple;
-import com.example.regexapp.plain.MatchInfo;
+import com.example.regexapp.plain.RegexApplyInfo;
 import com.example.regexapp.plain.RegexEngine;
 import com.example.regexapp.plain.RegexValidityInfo;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class RegexController {
 
         }
 
-        RespBody<RegexValidateResponseBody> responseBody = new RespBody(ResponseEnum.SUCCESS.toString(), result);
+        RespBody responseBody = new RespBody(ResponseEnum.SUCCESS.toString(), result);
         return new ResponseEntity<>(responseBody, httpStatus);
     }
 
@@ -39,13 +39,11 @@ public class RegexController {
     }
 
     @PostMapping("/regex/apply")
-    public ResponseEntity<MatchInfo>  regexApply(@Valid @RequestBody RegexApplyRequestBody body) {
+    public ResponseEntity<RegexApplyInfo>  regexApply(@Valid @RequestBody RegexApplyRequestBody body) {
         LogSimple.log(body.toString());
 
-        MatchInfo matchInfo = RegexEngine.apply(body.regex, body.text);
-        RegexApplyResponseBody result = new RegexApplyResponseBody(matchInfo);
-
-        return createResponseEntity(result, null);
+        RegexApplyInfo regexApplyInfo = RegexEngine.apply(body.regex, body.text);
+        return createResponseEntity(regexApplyInfo, null);
     }
 
 //    @ResponseStatus(HttpStatus.OK)

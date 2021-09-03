@@ -29,12 +29,13 @@ public class RegexEngine {
         return getValidityInfo(regexStr);
     }
 
-    public static MatchInfo apply(String regexStr, String inputStr) {
+    public static RegexApplyInfo apply(String regexStr, String inputStr) {
         RegexValidityInfo validityInfo = getValidityInfo(regexStr);
-        List<String> matches = null;
+        RegexApplyInfo applyInfo = new RegexApplyInfo();
 
         if (validityInfo.isValid()) {
             Pattern p = validityInfo.pattern;
+            List<String> matches = null;
 
             if (p != null) {
                 Matcher m = p.matcher(inputStr);
@@ -44,10 +45,12 @@ public class RegexEngine {
                     matches.add(m.group());
                 }
             }
+            applyInfo.count = matches != null ? matches.size() : 0;
+            applyInfo.matches = matches;
+        } else {
+            applyInfo.error = validityInfo.getError();
         }
 
-        int count = matches != null ? matches.size() : 0;
-        return new MatchInfo(count, matches);
-
+        return applyInfo;
     }
 }

@@ -1,19 +1,19 @@
 package com.example.regexapp.regexController;
 
-import com.example.regexapp.plain.MatchInfo;
+import com.example.regexapp.plain.RegexApplyInfo;
 
 public class RegexApplyResponseBody {
-    MatchInfo matches;
+    RegexApplyInfo matches;
 
-    public RegexApplyResponseBody(MatchInfo matches) {
+    public RegexApplyResponseBody(RegexApplyInfo matches) {
         this.matches = matches;
     }
 
-    public MatchInfo getMatches() {
+    public RegexApplyInfo getMatches() {
         return matches;
     }
 
-    public void setMatches(MatchInfo matches) {
+    public void setMatches(RegexApplyInfo matches) {
         this.matches = matches;
     }
 
