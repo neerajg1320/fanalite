@@ -3,6 +3,7 @@ package com.example.regexapp.regexController;
 import com.example.regexapp.LogSimple;
 import com.example.regexapp.plain.MatchInfo;
 import com.example.regexapp.plain.RegexEngine;
+import com.example.regexapp.plain.RegexValidityInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,23 +17,43 @@ import java.util.Map;
 
 @RestController
 public class RegexController {
+    public ResponseEntity createResponseEntity(Object result, String error) {
+        HttpStatus httpStatus = HttpStatus.OK;
 
-    @PostMapping("/regex/validate")
-    public ResponseEntity<Boolean> regexValidate(@Valid @RequestBody RegexValidateRequestBody body) {
+        if (error != null) {
+            httpStatus = HttpStatus.BAD_REQUEST;
+        } else {
 
-        LogSimple.log(body.toString());
+        }
 
-        return new ResponseEntity<>(RegexEngine.isValidRegex(body.regex), HttpStatus.OK);
+        RespBody<RegexValidateResponseBody> responseBody = new RespBody(ResponseEnum.SUCCESS.toString(), result);
+        return new ResponseEntity<>(responseBody, httpStatus);
     }
 
+    @PostMapping("/regex/validate")
+    public ResponseEntity<RespBody> regexValidate(@Valid @RequestBody RegexValidateRequestBody body) {
+        LogSimple.log(body.toString());
+
+        RegexValidityInfo validityInfo = RegexEngine.checkValidity(body.regex);
+        return createResponseEntity(validityInfo, null);
+    }
 
     @PostMapping("/regex/apply")
     public ResponseEntity<MatchInfo>  regexApply(@Valid @RequestBody RegexApplyRequestBody body) {
-        //[TODO] Need to be replaced with Log4j
         LogSimple.log(body.toString());
 
-        return new ResponseEntity<>(RegexEngine.apply(body.regex, body.text), HttpStatus.OK);
+        MatchInfo matchInfo = RegexEngine.apply(body.regex, body.text);
+        RegexApplyResponseBody result = new RegexApplyResponseBody(matchInfo);
+
+        return createResponseEntity(result, null);
     }
+
+//    @ResponseStatus(HttpStatus.OK)
+//    @ExceptionHandler(PatternSyntaxException.class)
+//    public String handleRegexException(
+//            PatternSyntaxException ex) {
+//        return ex.getMessage();
+//    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

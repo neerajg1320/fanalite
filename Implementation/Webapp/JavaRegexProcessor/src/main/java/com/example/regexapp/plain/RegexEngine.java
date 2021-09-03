@@ -8,35 +8,41 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegexEngine {
-    private static Pattern getPattern(String regexStr) {
-        Pattern p = null;
+    private static RegexValidityInfo getValidityInfo(String regexStr) {
+        RegexValidityInfo validityInfo = new RegexValidityInfo();
 
         try {
-            p = Pattern.compile(regexStr);
+            validityInfo.pattern = Pattern.compile(regexStr);
+            validityInfo.valid = true;
         } catch (IllegalArgumentException e) {
             //[TODO] Log
-            LogSimple.log(String.format("Invalid regex string: %s", regexStr));
+            LogSimple.log(String.format("Invalid regex string: %s", e.getMessage()));
+            validityInfo.valid = false;
+            validityInfo.error = e.getMessage();
         }
 
-        return p;
+        return validityInfo;
     }
 
-    public static boolean isValidRegex(String regexStr) {
-        //[TODO] Error check for null and empty string
-
-        return getPattern(regexStr) != null;
+    public static RegexValidityInfo checkValidity(String regexStr) {
+        //[TODO] Error check for null and empty strin
+        return getValidityInfo(regexStr);
     }
 
     public static MatchInfo apply(String regexStr, String inputStr) {
-        Pattern p = getPattern(regexStr);
+        RegexValidityInfo validityInfo = getValidityInfo(regexStr);
         List<String> matches = null;
 
-        if (p != null) {
-            Matcher m = p.matcher(inputStr);
-            matches = new ArrayList<>();
+        if (validityInfo.isValid()) {
+            Pattern p = validityInfo.pattern;
 
-            while (m.find()) {
-                matches.add(m.group());
+            if (p != null) {
+                Matcher m = p.matcher(inputStr);
+                matches = new ArrayList<>();
+
+                while (m.find()) {
+                    matches.add(m.group());
+                }
             }
         }
 
