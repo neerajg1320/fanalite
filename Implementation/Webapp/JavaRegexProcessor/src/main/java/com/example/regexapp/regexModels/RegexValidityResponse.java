@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class RegexValidityResponse {
     boolean valid;
-    String error;
+    String regexError;
 
     @JsonIgnore
     Pattern pattern;
@@ -16,7 +16,7 @@ public class RegexValidityResponse {
 
     public RegexValidityResponse(boolean valid, String error) {
         this.valid = valid;
-        this.error = error;
+        this.regexError = error;
     }
 
     public boolean isValid() {
@@ -27,12 +27,12 @@ public class RegexValidityResponse {
         this.valid = valid;
     }
 
-    public String getError() {
-        return error;
+    public String getRegexError() {
+        return regexError;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setRegexError(String regexError) {
+        this.regexError = regexError;
     }
 
     public Pattern getPattern() {
@@ -47,7 +47,7 @@ public class RegexValidityResponse {
     public String toString() {
         return "RegexValidityResponse{" +
                 "valid=" + valid +
-                ", error='" + error + '\'' +
+                ", regexError='" + regexError + '\'' +
                 '}';
     }
 }

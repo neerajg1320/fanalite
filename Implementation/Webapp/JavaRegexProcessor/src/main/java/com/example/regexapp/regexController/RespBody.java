@@ -1,13 +1,13 @@
 package com.example.regexapp.regexController;
 
-public class RespBody<T> {
+public class RespBody<T, E> {
     String status;
     T result;
+    E error;
 
-    public RespBody(String status, T result) {
-        this.status = status;
-        this.result = result;
+    public RespBody() {
     }
+
 
     public String getStatus() {
         return status;
@@ -25,11 +25,20 @@ public class RespBody<T> {
         this.result = result;
     }
 
+    public E getError() {
+        return error;
+    }
+
+    public void setError(E error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         return "RespBody{" +
                 "status='" + status + '\'' +
                 ", result=" + result +
+                ", error=" + error +
                 '}';
     }
 }

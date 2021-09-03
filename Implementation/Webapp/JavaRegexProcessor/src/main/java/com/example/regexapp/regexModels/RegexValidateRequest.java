@@ -3,7 +3,7 @@ package com.example.regexapp.regexModels;
 import javax.validation.constraints.NotBlank;
 
 public class RegexValidateRequest {
-    @NotBlank(message = "regex is missing")
+    @NotBlank(message = "'regex' is a required property")
     String regex;
 
     public String getRegex() {

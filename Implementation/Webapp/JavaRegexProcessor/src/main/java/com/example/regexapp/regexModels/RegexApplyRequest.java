@@ -3,10 +3,10 @@ package com.example.regexapp.regexModels;
 import javax.validation.constraints.NotBlank;
 
 public class RegexApplyRequest {
-    @NotBlank(message = "regex is missing")
+    @NotBlank(message = "'regex' is a required property")
     String regex;
 
-    @NotBlank(message = "text is missing")
+    @NotBlank(message = "'text' is a required property")
     String text;
 
     public String getRegex() {

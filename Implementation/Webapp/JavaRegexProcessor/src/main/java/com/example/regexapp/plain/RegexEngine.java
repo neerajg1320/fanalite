@@ -20,7 +20,7 @@ public class RegexEngine {
             //[TODO] Log
             LogSimple.log(String.format("Invalid regex string: %s", e.getMessage()));
             validityInfo.setValid(false);
-            validityInfo.setError(e.getMessage());
+            validityInfo.setRegexError(e.getMessage());
         }
 
         return validityInfo;
@@ -50,7 +50,7 @@ public class RegexEngine {
             applyInfo.setCount(matches != null ? matches.size() : 0);
             applyInfo.setMatches(matches);
         } else {
-            applyInfo.setError(validityInfo.getError());
+            applyInfo.setRegexError(validityInfo.getRegexError());
         }
 
         return applyInfo;

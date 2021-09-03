@@ -19,17 +19,21 @@ import java.util.Map;
 
 @RestController
 public class RegexController {
-    public ResponseEntity createResponseEntity(Object result, String error) {
+    public ResponseEntity createResponseEntity(Object result, Object error) {
         HttpStatus httpStatus = HttpStatus.OK;
+
+        RespBody respBody = new RespBody();
 
         if (error != null) {
             httpStatus = HttpStatus.BAD_REQUEST;
+            respBody.setStatus(ResponseEnum.FAILED.toString());
+            respBody.setError(error);
         } else {
-
+            respBody.setStatus(ResponseEnum.SUCCESS.toString());
+            respBody.setResult(result);
         }
 
-        RespBody responseBody = new RespBody(ResponseEnum.SUCCESS.toString(), result);
-        return new ResponseEntity<>(responseBody, httpStatus);
+        return new ResponseEntity(respBody, httpStatus);
     }
 
     @PostMapping("/regex/validate")
@@ -48,23 +52,32 @@ public class RegexController {
         return createResponseEntity(regexApplyResponse, null);
     }
 
-//    @ResponseStatus(HttpStatus.OK)
-//    @ExceptionHandler(PatternSyntaxException.class)
-//    public String handleRegexException(
-//            PatternSyntaxException ex) {
-//        return ex.getMessage();
+
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public Map<String, String> handleValidationExceptions(
+//            MethodArgumentNotValidException ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        ex.getBindingResult().getAllErrors().forEach((error) -> {
+//            String fieldName = ((FieldError) error).getField();
+//            String errorMessage = error.getDefaultMessage();
+//            errors.put(fieldName, errorMessage);
+//        });
+//        return errors;
 //    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
+    public ResponseEntity handleValidationExceptions(
             MethodArgumentNotValidException ex) {
+
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return errors;
+
+        return createResponseEntity(null, errors);
     }
 }

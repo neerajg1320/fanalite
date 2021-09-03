@@ -5,7 +5,7 @@ import java.util.List;
 public class RegexApplyResponse {
     int count;
     List<String> matches;
-    String error;
+    String regexError;
 
     public RegexApplyResponse() {
     }
@@ -13,7 +13,7 @@ public class RegexApplyResponse {
     public RegexApplyResponse(int count, List<String> matches, String error) {
         this.count = count;
         this.matches = matches;
-        this.error = error;
+        this.regexError = error;
     }
 
     public int getCount() {
@@ -32,12 +32,12 @@ public class RegexApplyResponse {
         this.matches = matches;
     }
 
-    public String getError() {
-        return error;
+    public String getRegexError() {
+        return regexError;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setRegexError(String regexError) {
+        this.regexError = regexError;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class RegexApplyResponse {
         return "RegexApplyResponse{" +
                 "count=" + count +
                 ", matches=" + matches +
-                ", error='" + error + '\'' +
+                ", regexError='" + regexError + '\'' +
                 '}';
     }
 }
