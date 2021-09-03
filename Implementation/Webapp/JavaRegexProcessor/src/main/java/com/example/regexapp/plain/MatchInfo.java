@@ -1,4 +1,4 @@
-package com.example.plain;
+package com.example.regexapp.plain;
 
 import java.util.List;
 

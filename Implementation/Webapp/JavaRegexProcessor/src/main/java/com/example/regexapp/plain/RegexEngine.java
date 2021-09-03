@@ -1,6 +1,6 @@
-package com.example.plain;
+package com.example.regexapp.plain;
 
-import com.example.LogSimple;
+import com.example.regexapp.LogSimple;
 
 import java.util.ArrayList;
 import java.util.List;
