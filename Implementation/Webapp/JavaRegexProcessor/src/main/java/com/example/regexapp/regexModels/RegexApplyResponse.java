@@ -1,7 +1,10 @@
 package com.example.regexapp.regexModels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegexApplyResponse {
     int count;
     List<String> matches;

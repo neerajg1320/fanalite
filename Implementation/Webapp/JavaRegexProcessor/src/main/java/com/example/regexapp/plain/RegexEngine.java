@@ -50,6 +50,7 @@ public class RegexEngine {
             applyInfo.setCount(matches != null ? matches.size() : 0);
             applyInfo.setMatches(matches);
         } else {
+            applyInfo.setCount(-1);
             applyInfo.setRegexError(validityInfo.getRegexError());
         }
 

@@ -1,5 +1,8 @@
 package com.example.regexapp.regexController;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RespBody<T, E> {
     String status;
     T result;
@@ -33,12 +36,12 @@ public class RespBody<T, E> {
         this.error = error;
     }
 
-    @Override
-    public String toString() {
-        return "RespBody{" +
-                "status='" + status + '\'' +
-                ", result=" + result +
-                ", error=" + error +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "RespBody{" +
+//                "status='" + status + '\'' +
+//                ", result=" + result +
+//                ", error=" + error +
+//                '}';
+//    }
 }

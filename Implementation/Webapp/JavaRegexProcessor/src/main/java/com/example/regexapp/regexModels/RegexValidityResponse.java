@@ -1,9 +1,11 @@
 package com.example.regexapp.regexModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.regex.Pattern;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegexValidityResponse {
     boolean valid;
     String regexError;
