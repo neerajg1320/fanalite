@@ -1,16 +1,16 @@
-package com.example.regexapp.plain;
+package com.example.regexapp.regexModels;
 
 import java.util.List;
 
-public class RegexApplyInfo {
+public class RegexApplyResponse {
     int count;
     List<String> matches;
     String error;
 
-    public RegexApplyInfo() {
+    public RegexApplyResponse() {
     }
 
-    public RegexApplyInfo(int count, List<String> matches, String error) {
+    public RegexApplyResponse(int count, List<String> matches, String error) {
         this.count = count;
         this.matches = matches;
         this.error = error;
@@ -42,7 +42,7 @@ public class RegexApplyInfo {
 
     @Override
     public String toString() {
-        return "RegexApplyInfo{" +
+        return "RegexApplyResponse{" +
                 "count=" + count +
                 ", matches=" + matches +
                 ", error='" + error + '\'' +

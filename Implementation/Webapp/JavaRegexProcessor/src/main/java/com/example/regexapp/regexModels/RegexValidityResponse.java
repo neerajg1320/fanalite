@@ -1,20 +1,20 @@
-package com.example.regexapp.plain;
+package com.example.regexapp.regexModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.regex.Pattern;
 
-public class RegexValidityInfo {
+public class RegexValidityResponse {
     boolean valid;
     String error;
 
     @JsonIgnore
     Pattern pattern;
 
-    public RegexValidityInfo() {
+    public RegexValidityResponse() {
     }
 
-    public RegexValidityInfo(boolean valid, String error) {
+    public RegexValidityResponse(boolean valid, String error) {
         this.valid = valid;
         this.error = error;
     }
@@ -45,7 +45,7 @@ public class RegexValidityInfo {
 
     @Override
     public String toString() {
-        return "RegexValidityInfo{" +
+        return "RegexValidityResponse{" +
                 "valid=" + valid +
                 ", error='" + error + '\'' +
                 '}';

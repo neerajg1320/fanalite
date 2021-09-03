@@ -1,9 +1,11 @@
 package com.example.regexapp.regexController;
 
 import com.example.regexapp.LogSimple;
-import com.example.regexapp.plain.RegexApplyInfo;
-import com.example.regexapp.plain.RegexEngine;
-import com.example.regexapp.plain.RegexValidityInfo;
+import com.example.regexapp.plain.*;
+import com.example.regexapp.regexModels.RegexApplyRequest;
+import com.example.regexapp.regexModels.RegexApplyResponse;
+import com.example.regexapp.regexModels.RegexValidateRequest;
+import com.example.regexapp.regexModels.RegexValidityResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -31,19 +33,19 @@ public class RegexController {
     }
 
     @PostMapping("/regex/validate")
-    public ResponseEntity<RespBody> regexValidate(@Valid @RequestBody RegexValidateRequestBody body) {
+    public ResponseEntity<RespBody> regexValidate(@Valid @RequestBody RegexValidateRequest body) {
         LogSimple.log(body.toString());
 
-        RegexValidityInfo validityInfo = RegexEngine.checkValidity(body.regex);
+        RegexValidityResponse validityInfo = RegexEngine.checkValidity(body.getRegex());
         return createResponseEntity(validityInfo, null);
     }
 
     @PostMapping("/regex/apply")
-    public ResponseEntity<RegexApplyInfo>  regexApply(@Valid @RequestBody RegexApplyRequestBody body) {
+    public ResponseEntity<RegexApplyResponse>  regexApply(@Valid @RequestBody RegexApplyRequest body) {
         LogSimple.log(body.toString());
 
-        RegexApplyInfo regexApplyInfo = RegexEngine.apply(body.regex, body.text);
-        return createResponseEntity(regexApplyInfo, null);
+        RegexApplyResponse regexApplyResponse = RegexEngine.apply(body.getRegex(), body.getText());
+        return createResponseEntity(regexApplyResponse, null);
     }
 
 //    @ResponseStatus(HttpStatus.OK)

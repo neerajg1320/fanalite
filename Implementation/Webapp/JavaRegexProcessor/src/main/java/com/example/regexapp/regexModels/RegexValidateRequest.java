@@ -1,8 +1,8 @@
-package com.example.regexapp.regexController;
+package com.example.regexapp.regexModels;
 
 import javax.validation.constraints.NotBlank;
 
-public class RegexValidateRequestBody {
+public class RegexValidateRequest {
     @NotBlank(message = "regex is missing")
     String regex;
 
@@ -16,7 +16,7 @@ public class RegexValidateRequestBody {
 
     @Override
     public String toString() {
-        return "RegexValidateRequestBody{" +
+        return "RegexValidateRequest{" +
                 "regex='" + regex + '\'' +
                 '}';
     }
