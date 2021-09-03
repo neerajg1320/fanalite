@@ -3,7 +3,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 import json
 
-from app.plain.regex import check_compile_regex, regex_apply_on_text
+from app.plain.regex import check_compile_regex, regex_apply_on_text, regex_apply_on_text_brief
 from app.plain.exceptions import InvalidParams
 from app.plain.debug_utils import debug_log
 
@@ -104,6 +104,6 @@ def regex_apply():
         print("Text:\n", text)
         print("Flags:\n", flags)
 
-    result = regex_apply_on_text(regex_str, text, flags=flags)
+    result = regex_apply_on_text_brief(regex_str, text, flags=flags)
 
-    return create_response(result=result, error=result["error"], status=200)
+    return create_response(result=result, error=result.get("error", None), status=200)

@@ -50,3 +50,18 @@ def regex_apply_on_text(regex_str, text, flags=None):
 
     return {"matches": matches, "error": regex_error}
 
+
+def regex_apply_on_text_brief(regex_str, text, flags=None):
+    pattern, regex_error = check_compile_regex(regex_str, flags=flags)
+
+    count = -1
+    matches = []
+    if not regex_error:
+        for m in pattern.finditer(text):
+            matches.append(m.group())
+        count = len(matches)
+        result_dict = {"count": count, "matches": matches}
+    else:
+        result_dict = {"count": count, "error": regex_error}
+
+    return result_dict
