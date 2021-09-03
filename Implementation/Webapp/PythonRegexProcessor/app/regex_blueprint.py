@@ -56,10 +56,10 @@ def get_validated_json(request, schema):
 
 def create_response(result=None, error=None, status=None):
     if error is not None:
-        response = (jsonify({ "status": "failed", "error": error }),
+        response = (jsonify({ "status": "FAILED", "error": error }),
                     status if status is not None else 400)
     else:
-        response = (jsonify({"status": "success", "result": result}),
+        response = (jsonify({"status": "SUCCESS", "result": result}),
                     status if status is not None else 200)
 
     debug_log("response:", result if error is None else error, active=False)
@@ -83,10 +83,10 @@ def regex_isvalid_post():
     _, regex_error = check_compile_regex(request_dict["regex"])
 
     result = {
-        'isValid': regex_error is None
+        'valid': regex_error is None
     }
     if regex_error is not None:
-        result.update({'regex_error': regex_error})
+        result.update({'regexError': regex_error})
 
     return create_response(result=result)
 
