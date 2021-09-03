@@ -1,6 +1,9 @@
 package com.example.regexapp.regexController;
 
+import javax.validation.constraints.NotBlank;
+
 public class RegexValidateRequestBody {
+    @NotBlank(message = "regex is missing")
     String regex;
 
     public String getRegex() {

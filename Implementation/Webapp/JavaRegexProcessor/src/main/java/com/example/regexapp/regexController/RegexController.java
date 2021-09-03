@@ -7,12 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 public class RegexController {
 
     @PostMapping("/regex/validate")
-    public ResponseEntity<Boolean> regexValidate(@RequestBody RegexValidateRequestBody body) {
+    public ResponseEntity<Boolean> regexValidate(@Valid @RequestBody RegexValidateRequestBody body) {
 
         LogSimple.log(body.toString());
 
@@ -21,7 +23,7 @@ public class RegexController {
 
 
     @PostMapping("/regex/apply")
-    public ResponseEntity<MatchInfo>  regexApply(@RequestBody RegexApplyRequestBody body) {
+    public ResponseEntity<MatchInfo>  regexApply(@Valid @RequestBody RegexApplyRequestBody body) {
         //[TODO] Need to be replaced with Log4j
         LogSimple.log(body.toString());
 
