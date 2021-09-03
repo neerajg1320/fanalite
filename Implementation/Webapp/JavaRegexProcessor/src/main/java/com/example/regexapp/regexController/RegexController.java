@@ -49,7 +49,7 @@ public class RegexController {
         LogSimple.log(body.toString());
 
         RegexApplyResponse regexApplyResponse = RegexEngine.apply(body.getRegex(), body.getText());
-        return createResponseEntity(regexApplyResponse, null);
+        return createResponseEntity(regexApplyResponse, regexApplyResponse.getRegexError());
     }
 
 
