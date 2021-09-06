@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.fanalite.rulesapp.R
+import com.fanalite.rulesapp.databinding.FragmentRulesListBinding
 
 
 /**
@@ -14,13 +16,21 @@ import com.fanalite.rulesapp.R
  * create an instance of this fragment.
  */
 class RulesListFragment : Fragment() {
+    private var _binding: FragmentRulesListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_rules_list, container, false)
+        _binding = FragmentRulesListBinding.inflate(inflater, container, false)
+
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_rulesListFragment_to_addRuleFragment)
+        }
+
+        return binding.root
     }
 
 
