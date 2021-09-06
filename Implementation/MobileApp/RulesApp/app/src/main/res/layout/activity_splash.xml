@@ -6,7 +6,7 @@
     android:id="@+id/splashBox"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+
     tools:context=".SplashActivity">
 
     <!--THIS IS IMAGEVIEW FOR OUR IMAGE IN SPLASH SCREEN-->
@@ -20,7 +20,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorAccent" />
 
     <com.fanalite.rulesapp.custom.CustomTextView
         android:id="@+id/textView"
@@ -29,7 +30,7 @@
         android:layout_marginTop="20dp"
         android:text="Insights"
         android:textAlignment="center"
-        android:textColor="@color/ic_launcher_background"
+        android:textColor="@color/colorAccent"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
