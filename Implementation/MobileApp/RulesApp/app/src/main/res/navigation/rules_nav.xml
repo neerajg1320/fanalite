@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rules_nav"
+    app:startDestination="@id/rulesListFragment">
+
+    <fragment
+        android:id="@+id/rulesListFragment"
+        android:name="com.fanalite.rulesapp.fragments.list.RulesListFragment"
+        android:label="fragment_rules_list"
+        tools:layout="@layout/fragment_rules_list" >
+        <action
+            android:id="@+id/action_rulesListFragment_to_addRuleFragment"
+            app:destination="@id/addRuleFragment" />
+        <action
+            android:id="@+id/action_rulesListFragment_to_updateRuleFragment"
+            app:destination="@id/updateRuleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addRuleFragment"
+        android:name="com.fanalite.rulesapp.fragments.add.AddRuleFragment"
+        android:label="fragment_add_rule"
+        tools:layout="@layout/fragment_add_rule" >
+        <action
+            android:id="@+id/action_addRuleFragment_to_rulesListFragment"
+            app:destination="@id/rulesListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateRuleFragment"
+        android:name="com.fanalite.rulesapp.fragments.update.UpdateRuleFragment"
+        android:label="fragment_update_rule"
+        tools:layout="@layout/fragment_update_rule" >
+        <action
+            android:id="@+id/action_updateRuleFragment_to_rulesListFragment"
+            app:destination="@id/rulesListFragment" />
+    </fragment>
+</navigation>
