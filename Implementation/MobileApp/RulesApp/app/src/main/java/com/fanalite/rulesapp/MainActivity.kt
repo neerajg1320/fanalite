@@ -7,6 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 
+val TAG:String = "RulesApp"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
