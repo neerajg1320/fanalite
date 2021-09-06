@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splashBox"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
@@ -12,7 +13,7 @@
     <!--YOU CAN ADD YOUR IMAGE TO DRAWABLES.
         HERE geeksforgeeks IS THE NAME OF IMAGE-->
     <ImageView
-        android:id="@+id/SplashScreenImage"
+        android:id="@+id/splashScreenImage"
         android:layout_width="300dp"
         android:layout_height="200dp"
         android:src="@drawable/ic_launcher_foreground"
@@ -32,7 +33,7 @@
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SplashScreenImage" />
+        app:layout_constraintTop_toBottomOf="@+id/splashScreenImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
