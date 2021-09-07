@@ -27,11 +27,11 @@ class RegexRepository (private val todoDao: RegexDao){
         return todoDao.searchDatabase(searchQuery)
     }
 
-//    fun sortByHighPriority(): LiveData<List<RegexModel>> {
-//        return todoDao.sortByHighPriority()
-//    }
-//
-//    fun sortByLowPriority(): LiveData<List<RegexModel>> {
-//        return todoDao.sortByLowPriority()
-//    }
+    fun sortByLanguageAsc(): LiveData<List<RegexModel>> {
+        return todoDao.sortByLanguageAsc()
+    }
+
+    fun sortByLanguageDesc(): LiveData<List<RegexModel>> {
+        return todoDao.sortByLanguageDesc()
+    }
 }

@@ -39,4 +39,16 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
             repository.deleteAll()
         }
     }
+
+    fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>> {
+        return regexDao.searchDatabase(searchQuery)
+    }
+
+    fun sortByLanguageAsc(): LiveData<List<RegexModel>> {
+        return regexDao.sortByLanguageAsc()
+    }
+
+    fun sortByLanguageDesc(): LiveData<List<RegexModel>> {
+        return regexDao.sortByLanguageDesc()
+    }
 }

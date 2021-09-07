@@ -24,4 +24,11 @@ interface RegexDao {
     @Query("SELECT * FROM regex_table WHERE name LIKE :searchQuery")
     fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>>
 
+
+    @Query("SELECT * FROM regex_table ORDER BY type ASC ")
+    fun sortByLanguageAsc(): LiveData<List<RegexModel>>
+
+    @Query("SELECT * FROM regex_table ORDER BY type DESC ")
+    fun sortByLanguageDesc(): LiveData<List<RegexModel>>
+
 }
