@@ -24,7 +24,7 @@ class RegexRepository (private val todoDao: RegexDao){
     }
 
     fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>> {
-        return todoDao.searchDatabase(searchQuery)
+        return todoDao.searchByTitle(searchQuery)
     }
 
     fun sortByLanguageAsc(): LiveData<List<RegexModel>> {

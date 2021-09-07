@@ -22,7 +22,7 @@ interface RegexDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM regex_table WHERE title LIKE :searchQuery")
-    fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>>
+    fun searchByTitle(searchQuery: String): LiveData<List<RegexModel>>
 
 
     @Query("SELECT * FROM regex_table ORDER BY language ASC ")

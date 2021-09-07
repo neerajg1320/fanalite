@@ -40,8 +40,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>> {
-        return regexDao.searchDatabase(searchQuery)
+    fun searchByTitle(searchQuery: String): LiveData<List<RegexModel>> {
+        return regexDao.searchByTitle(searchQuery)
     }
 
     fun sortByLanguageAsc(): LiveData<List<RegexModel>> {
