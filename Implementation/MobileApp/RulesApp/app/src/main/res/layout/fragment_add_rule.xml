@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.add.AddRuleFragment">
+    tools:context=".view.fragments.add.AddRuleFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilName"
@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.fanalite.rulesapp.custom.CustomEditText
+        <com.fanalite.rulesapp.view.custom.CustomEditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilName">
 
-        <com.fanalite.rulesapp.custom.CustomRadioButton
+        <com.fanalite.rulesapp.view.custom.CustomRadioButton
             android:id="@+id/rb_java"
             android:layout_width="0dp"
             android:layout_height="@dimen/language_rb_height"
@@ -53,7 +53,7 @@
             android:textColor="@color/colorPrimaryText"
             android:textStyle="bold" />
 
-        <com.fanalite.rulesapp.custom.CustomRadioButton
+        <com.fanalite.rulesapp.view.custom.CustomRadioButton
             android:id="@+id/rb_python"
             android:layout_width="0dp"
             android:layout_height="@dimen/language_rb_height"
@@ -82,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rgLanguage">
 
-        <com.fanalite.rulesapp.custom.CustomEditText
+        <com.fanalite.rulesapp.view.custom.CustomEditText
             android:id="@+id/etRegex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
             tools:text="abc@gmail.com" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.fanalite.rulesapp.custom.CustomButton
+    <com.fanalite.rulesapp.view.custom.CustomButton
         android:id="@+id/btnRegexAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

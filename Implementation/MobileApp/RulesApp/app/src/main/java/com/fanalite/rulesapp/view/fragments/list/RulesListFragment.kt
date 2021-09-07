@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.fragments.list
+package com.fanalite.rulesapp.view.fragments.list
 
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fanalite.rulesapp.R
-import com.fanalite.rulesapp.TAG
-import com.fanalite.rulesapp.data.RegexViewModel
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.view.TAG
+import com.fanalite.rulesapp.viewmodels.RegexViewModel
+import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.databinding.FragmentRulesListBinding
 
 

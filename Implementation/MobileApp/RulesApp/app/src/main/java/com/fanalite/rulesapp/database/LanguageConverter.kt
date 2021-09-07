@@ -1,10 +1,10 @@
-package com.fanalite.rulesapp.data
+package com.fanalite.rulesapp.database
 
 import androidx.room.TypeConverter
-import com.fanalite.rulesapp.data.models.Language
+import com.fanalite.rulesapp.models.Language
 
 
-class Converter {
+class LanguageConverter {
     @TypeConverter
     fun fromLanguage(language: Language): String {
         return language.name

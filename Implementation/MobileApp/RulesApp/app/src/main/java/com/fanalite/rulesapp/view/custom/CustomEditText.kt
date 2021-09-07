@@ -1,12 +1,11 @@
-package com.fanalite.rulesapp.custom
+package com.fanalite.rulesapp.view.custom
 
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 
-class CustomButton(context: Context, attrs: AttributeSet ): AppCompatButton(context, attrs) {
+class CustomEditText(context: Context, attrs: AttributeSet ): AppCompatEditText(context, attrs) {
     init {
         applyFont()
     }

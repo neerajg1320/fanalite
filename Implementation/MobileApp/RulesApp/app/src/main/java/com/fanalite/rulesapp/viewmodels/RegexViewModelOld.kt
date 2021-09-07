@@ -6,8 +6,8 @@ import android.util.Log.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.fanalite.rulesapp.TAG
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.view.TAG
+import com.fanalite.rulesapp.models.RegexModel
 
 
 class RegexViewModelOld: ViewModel() {

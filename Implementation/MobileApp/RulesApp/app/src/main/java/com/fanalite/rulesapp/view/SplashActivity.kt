@@ -1,14 +1,13 @@
-package com.fanalite.rulesapp
+package com.fanalite.rulesapp.view
 
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.fanalite.rulesapp.R
 
 //@Suppress("DEPRECATION")
 class SplashActivity : AppCompatActivity() {

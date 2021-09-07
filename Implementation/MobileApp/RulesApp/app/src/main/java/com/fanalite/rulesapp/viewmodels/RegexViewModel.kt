@@ -1,16 +1,17 @@
-package com.fanalite.rulesapp.data
+package com.fanalite.rulesapp.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.fanalite.rulesapp.data.models.RegexModel
-import com.fanalite.rulesapp.data.repository.RegexRepository
+import com.fanalite.rulesapp.database.AppDatabase
+import com.fanalite.rulesapp.models.RegexModel
+import com.fanalite.rulesapp.repository.RegexRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
-    private val regexDao = RegexDatabase.getDatabase(application).regexDao()
+    private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val repository: RegexRepository = RegexRepository(regexDao)
 
     val getAllData: LiveData<List<RegexModel>> = repository.getAllData

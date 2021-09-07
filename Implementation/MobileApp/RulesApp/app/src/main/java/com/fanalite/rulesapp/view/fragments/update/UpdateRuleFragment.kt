@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.fragments.update
+package com.fanalite.rulesapp.view.fragments.update
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

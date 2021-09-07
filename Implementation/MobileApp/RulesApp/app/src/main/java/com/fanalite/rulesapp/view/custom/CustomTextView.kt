@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.custom
+package com.fanalite.rulesapp.view.custom
 
 import android.content.Context
 import android.graphics.Typeface

@@ -1,10 +1,11 @@
-package com.fanalite.rulesapp
+package com.fanalite.rulesapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.fanalite.rulesapp.R
 
 val TAG:String = "RulesApp"
 

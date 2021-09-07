@@ -1,10 +1,10 @@
-package com.fanalite.rulesapp.fragments.list
+package com.fanalite.rulesapp.view.fragments.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fanalite.rulesapp.databinding.ItemRuleLayoutBinding
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.models.RegexModel
 
 /**
  * An adapter class for RulesList adapter.

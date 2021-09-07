@@ -1,8 +1,8 @@
-package com.fanalite.rulesapp.data.repository
+package com.fanalite.rulesapp.repository
 
 import androidx.lifecycle.LiveData
-import com.fanalite.rulesapp.data.RegexDao
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.database.RegexDao
+import com.fanalite.rulesapp.models.RegexModel
 
 class RegexRepository (private val todoDao: RegexDao){
     val getAllData: LiveData<List<RegexModel>> = todoDao.getAllData()

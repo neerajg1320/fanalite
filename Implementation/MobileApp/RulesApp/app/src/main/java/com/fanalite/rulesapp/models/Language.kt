@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.data.models
+package com.fanalite.rulesapp.models
 
 enum class Language {
     JAVA,

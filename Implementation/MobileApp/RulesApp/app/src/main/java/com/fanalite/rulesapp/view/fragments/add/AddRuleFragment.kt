@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.fragments.add
+package com.fanalite.rulesapp.view.fragments.add
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,11 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.fanalite.rulesapp.R
-import com.fanalite.rulesapp.TAG
-import com.fanalite.rulesapp.data.RegexViewModel
-import com.fanalite.rulesapp.data.models.Language
+import com.fanalite.rulesapp.view.TAG
+import com.fanalite.rulesapp.viewmodels.RegexViewModel
+import com.fanalite.rulesapp.models.Language
 import com.fanalite.rulesapp.databinding.FragmentAddRuleBinding
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.models.RegexModel
 
 
 /**

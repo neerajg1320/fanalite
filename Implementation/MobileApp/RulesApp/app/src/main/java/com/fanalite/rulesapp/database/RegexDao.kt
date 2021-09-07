@@ -1,8 +1,8 @@
-package com.fanalite.rulesapp.data
+package com.fanalite.rulesapp.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.fanalite.rulesapp.data.models.RegexModel
+import com.fanalite.rulesapp.models.RegexModel
 
 @Dao
 interface RegexDao {

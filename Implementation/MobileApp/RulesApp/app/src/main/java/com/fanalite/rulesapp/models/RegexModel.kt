@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.data.models
+package com.fanalite.rulesapp.models
 
 import android.os.Parcelable
 import androidx.room.Entity

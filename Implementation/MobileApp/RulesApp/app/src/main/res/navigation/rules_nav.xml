@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/rulesListFragment"
-        android:name="com.fanalite.rulesapp.fragments.list.RulesListFragment"
+        android:name="com.fanalite.rulesapp.view.fragments.list.RulesListFragment"
         android:label="Rules"
         tools:layout="@layout/fragment_rules_list" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/addRuleFragment"
-        android:name="com.fanalite.rulesapp.fragments.add.AddRuleFragment"
+        android:name="com.fanalite.rulesapp.view.fragments.add.AddRuleFragment"
         android:label="Add Rule"
         tools:layout="@layout/fragment_add_rule" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/updateRuleFragment"
-        android:name="com.fanalite.rulesapp.fragments.update.UpdateRuleFragment"
+        android:name="com.fanalite.rulesapp.view.fragments.update.UpdateRuleFragment"
         android:label="Update Rule"
         tools:layout="@layout/fragment_update_rule" >
         <action
