@@ -2,7 +2,9 @@ package com.fanalite.rulesapp.view.fragments.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.fanalite.rulesapp.R
 import com.fanalite.rulesapp.databinding.ItemRuleLayoutBinding
 import com.fanalite.rulesapp.models.RegexModel
 
@@ -30,6 +32,12 @@ open class RulesListAdapter(val fragment: RulesListFragment) : RecyclerView.Adap
 
                 binding.ibDeleteProduct.setOnClickListener {
                     fragment.deleteRule(rulesList[position])
+                }
+
+                binding.ruleItem.setOnClickListener {
+                    val regexModel = rulesList[position]
+                    val action = RulesListFragmentDirections.actionRulesListFragmentToUpdateRuleFragment(regexModel)
+                    binding.root.findNavController().navigate(action)
                 }
             }
         }

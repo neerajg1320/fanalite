@@ -9,7 +9,7 @@
         android:id="@+id/rulesListFragment"
         android:name="com.fanalite.rulesapp.view.fragments.list.RulesListFragment"
         android:label="Rules"
-        tools:layout="@layout/fragment_rules_list" >
+        tools:layout="@layout/fragment_rules_list">
         <action
             android:id="@+id/action_rulesListFragment_to_addRuleFragment"
             app:destination="@id/addRuleFragment" />
@@ -30,9 +30,12 @@
         android:id="@+id/updateRuleFragment"
         android:name="com.fanalite.rulesapp.view.fragments.update.UpdateRuleFragment"
         android:label="Update Rule"
-        tools:layout="@layout/fragment_update_rule" >
+        tools:layout="@layout/fragment_update_rule">
         <action
             android:id="@+id/action_updateRuleFragment_to_rulesListFragment"
             app:destination="@id/rulesListFragment" />
+        <argument
+            android:name="currentItem"
+            app:argType="com.fanalite.rulesapp.models.RegexModel" />
     </fragment>
 </navigation>
