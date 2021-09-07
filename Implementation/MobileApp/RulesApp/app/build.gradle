@@ -39,6 +39,7 @@ android {
 }
 
 def room_version = "2.3.0"
+def retrofit_version = "2.6.0"
 
 dependencies {
 
@@ -55,6 +56,10 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
