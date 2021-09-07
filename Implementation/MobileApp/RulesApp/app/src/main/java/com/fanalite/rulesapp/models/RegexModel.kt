@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class RegexModel (
     @PrimaryKey(autoGenerate = true)
     var id:Int,
-    val name:String,
-    val type:Language,
+    val title:String,
+    val language:Language,
     val regex:String
 ): Parcelable

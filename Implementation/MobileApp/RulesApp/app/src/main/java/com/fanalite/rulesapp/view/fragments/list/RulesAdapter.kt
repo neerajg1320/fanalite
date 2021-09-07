@@ -26,7 +26,7 @@ open class RulesListAdapter(val fragment: RulesListFragment) : RecyclerView.Adap
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         with (holder as RuleViewHolder) {
             with (rulesList[position]) {
-                binding.tvItemName.text = name
+                binding.tvItemName.text = title
 
                 binding.ibDeleteProduct.setOnClickListener {
                     fragment.deleteRule(rulesList[position])

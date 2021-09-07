@@ -21,14 +21,14 @@ interface RegexDao {
     @Query("DELETE FROM regex_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM regex_table WHERE name LIKE :searchQuery")
+    @Query("SELECT * FROM regex_table WHERE title LIKE :searchQuery")
     fun searchDatabase(searchQuery: String): LiveData<List<RegexModel>>
 
 
-    @Query("SELECT * FROM regex_table ORDER BY type ASC ")
+    @Query("SELECT * FROM regex_table ORDER BY language ASC ")
     fun sortByLanguageAsc(): LiveData<List<RegexModel>>
 
-    @Query("SELECT * FROM regex_table ORDER BY type DESC ")
+    @Query("SELECT * FROM regex_table ORDER BY language DESC ")
     fun sortByLanguageDesc(): LiveData<List<RegexModel>>
 
 }
