@@ -21,7 +21,7 @@
         android:id="@+id/addRuleFragment"
         android:name="com.fanalite.rulesapp.view.fragments.add.AddRuleFragment"
         android:label="Add Rule"
-        tools:layout="@layout/fragment_add_rule" >
+        tools:layout="@layout/fragment_rule_detail" >
         <action
             android:id="@+id/action_addRuleFragment_to_rulesListFragment"
             app:destination="@id/rulesListFragment" />

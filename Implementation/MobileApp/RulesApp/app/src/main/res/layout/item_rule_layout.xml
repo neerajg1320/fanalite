@@ -9,23 +9,29 @@
     android:orientation="vertical"
     android:padding="@dimen/item_list_padding">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_item_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/item_background"
+        android:layout_width="@dimen/item_image_width"
+        android:layout_height="@dimen/item_image_height"
         android:padding="@dimen/item_image_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+        <ImageView
+            android:id="@+id/iv_item_default_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="image"
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="@color/colorAccentDark"
+            android:scaleType="fitXY" />
         <ImageView
             android:id="@+id/iv_item_image"
-            android:layout_width="@dimen/item_image_width"
-            android:layout_height="@dimen/item_image_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="image"
             android:scaleType="fitXY" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/ll_product_details"
@@ -44,7 +50,7 @@
             android:id="@+id/tv_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/lightGray"
+            android:textColor="@color/black"
             android:textSize="14sp"
             tools:text="Name" />
 
@@ -53,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/lightGray"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
             tools:text="$100.00" />

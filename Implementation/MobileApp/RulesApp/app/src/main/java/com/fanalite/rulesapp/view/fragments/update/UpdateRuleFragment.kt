@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.fanalite.rulesapp.R
-import com.fanalite.rulesapp.databinding.FragmentAddRuleBinding
+import com.fanalite.rulesapp.databinding.FragmentRuleDetailBinding
 import com.fanalite.rulesapp.models.Language
 import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.view.TAG
@@ -27,7 +27,7 @@ import com.fanalite.rulesapp.viewmodels.RegexViewModel
 class UpdateRuleFragment : Fragment() {
     private val args by navArgs<UpdateRuleFragmentArgs>()
 
-    private var _binding: FragmentAddRuleBinding? = null
+    private var _binding: FragmentRuleDetailBinding? = null
     private val binding get() = _binding!!
 
     private val mRegexViewModel: RegexViewModel by viewModels()
@@ -36,7 +36,7 @@ class UpdateRuleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAddRuleBinding.inflate(inflater, container, false)
+        _binding = FragmentRuleDetailBinding.inflate(inflater, container, false)
 
         val regexModel = args.currentItem
 
