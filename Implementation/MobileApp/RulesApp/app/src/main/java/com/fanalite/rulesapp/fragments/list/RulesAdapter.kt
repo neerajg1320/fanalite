@@ -1,14 +1,10 @@
 package com.fanalite.rulesapp.fragments.list
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fanalite.rulesapp.databinding.ItemRuleLayoutBinding
-import com.fanalite.rulesapp.models.RegexModel
+import com.fanalite.rulesapp.data.models.RegexModel
 
 /**
  * An adapter class for RulesList adapter.
@@ -33,7 +29,7 @@ open class RulesListAdapter(val fragment: RulesListFragment) : RecyclerView.Adap
                 binding.tvItemName.text = name
 
                 binding.ibDeleteProduct.setOnClickListener {
-                    fragment.deleteRule(position)
+                    fragment.deleteRule(rulesList[position])
                 }
             }
         }

@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fanalite.rulesapp.R
 import com.fanalite.rulesapp.TAG
+import com.fanalite.rulesapp.data.RegexViewModel
+import com.fanalite.rulesapp.data.models.RegexModel
 import com.fanalite.rulesapp.databinding.FragmentRulesListBinding
-import com.fanalite.rulesapp.models.RegexModel
-import com.fanalite.rulesapp.viewmodels.RegexViewModel
-
 
 
 /**
@@ -38,7 +37,13 @@ class RulesListFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentRulesListBinding.inflate(inflater, container, false)
 
-        mRegexViewModel.getRegexList().observe(viewLifecycleOwner, Observer { dataList ->
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_rulesListFragment_to_addRuleFragment)
+        }
+
+        createRecyclerView()
+
+        mRegexViewModel.getAllData.observe(viewLifecycleOwner, Observer { dataList ->
             Log.d(TAG, "mRegexViewModel.Observer(): dataList:size= ${dataList.size}")
             dataList.forEach {
                 Log.d(TAG, it.toString())
@@ -57,14 +62,14 @@ class RulesListFragment : Fragment() {
             adapter.setData(dataList)
         })
 
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_rulesListFragment_to_addRuleFragment)
-        }
-
-        createRecyclerView()
-
         return binding.root
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     private fun createRecyclerView() {
         val rvRules:RecyclerView = binding.rvRulesList
@@ -75,7 +80,7 @@ class RulesListFragment : Fragment() {
         rvRules.adapter = adapter
     }
 
-    fun deleteRule(position: Int) {
-        mRegexViewModel.deleteRegex(position)
+    fun deleteRule(regexModel: RegexModel) {
+        mRegexViewModel.deleteItem(regexModel)
     }
 }

@@ -7,9 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.fanalite.rulesapp.R
 import com.fanalite.rulesapp.TAG
+import com.fanalite.rulesapp.data.RegexViewModel
+import com.fanalite.rulesapp.data.models.Language
 import com.fanalite.rulesapp.databinding.FragmentAddRuleBinding
-import com.fanalite.rulesapp.models.RegexModel
+import com.fanalite.rulesapp.data.models.RegexModel
 
 
 /**
@@ -21,6 +27,7 @@ class AddRuleFragment : Fragment() {
     private var _binding: FragmentAddRuleBinding? = null
     private val binding get() = _binding!!
 
+    private val mRegexViewModel: RegexViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,20 +48,29 @@ class AddRuleFragment : Fragment() {
             val regexName: String = binding.etName.text.toString().trim { it <= ' ' }
             val regexStr: String = binding.etRegex.text.toString().trim { it <= ' ' }
 
-            val language: String = when {
+            val language: Language = when {
                 binding.rbJava.isChecked -> {
-                    "Java"
+                    Language.JAVA
                 }
                 binding.rbPython.isChecked -> {
-                    "Python"
+                    Language.PYTHON
                 }
                 else -> {
-                    "Unknown"
+                    Language.UNKNOWN
                 }
             }
 
-            val regexModel = RegexModel(regexName, language, regexStr)
+
+            val regexModel = RegexModel(0, regexName, language, regexStr)
             Log.d(TAG, "regexModel: ${regexModel}")
+
+            // We are assuming add at top
+            mRegexViewModel.insertData(regexModel)
+
+            Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
+
+            //Navigate back to ListFragment
+            findNavController().navigate(R.id.action_addRuleFragment_to_rulesListFragment)
         }
     }
 
