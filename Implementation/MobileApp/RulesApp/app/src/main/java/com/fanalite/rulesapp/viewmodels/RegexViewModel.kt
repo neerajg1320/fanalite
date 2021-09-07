@@ -8,25 +8,38 @@ import com.fanalite.rulesapp.models.RegexModel
 
 
 class RegexViewModel: ViewModel() {
-    private val regexList: MutableLiveData<List<RegexModel>> by lazy {
+    private val regexListLiveData: MutableLiveData<List<RegexModel>> by lazy {
         MutableLiveData<List<RegexModel>>().also {
             loadRegex()
         }
     }
 
+    private val regexModelList: MutableList<RegexModel> = mutableListOf(
+        RegexModel("a", "Java", "a"),
+        RegexModel("b", "Java", "b")
+    )
+
     fun getRegexList(): LiveData<List<RegexModel>>   {
-        return regexList
+        return regexListLiveData
     }
 
-    fun loadRegex() {
+    private fun loadRegex() {
         Handler().postDelayed({
-            val regexModelList: List<RegexModel> = mutableListOf(
-                RegexModel("a", "Java", "a"),
-                RegexModel("b", "Java", "b")
-            )
+            regexListLiveData.value = regexModelList
+        }, 500)
+    }
 
-            regexList.value = regexModelList
+    fun addRegex(regexModel: RegexModel, position: Int) {
+        Handler().postDelayed({
+            regexModelList.add(position, regexModel)
+            regexListLiveData.value = regexModelList
+        }, 500)
+    }
 
+    fun deleteRegex(position: Int) {
+        Handler().postDelayed({
+            regexModelList.removeAt(position)
+            regexListLiveData.value = regexModelList
         }, 500)
     }
 }

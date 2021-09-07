@@ -29,7 +29,7 @@ class RulesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val mRegexViewModel: RegexViewModel by viewModels()
-    private val adapter by lazy { RulesListAdapter() }
+    private val adapter by lazy { RulesListAdapter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,5 +73,9 @@ class RulesListFragment : Fragment() {
 
         // Define adapter
         rvRules.adapter = adapter
+    }
+
+    fun deleteRule(position: Int) {
+        mRegexViewModel.deleteRegex(position)
     }
 }

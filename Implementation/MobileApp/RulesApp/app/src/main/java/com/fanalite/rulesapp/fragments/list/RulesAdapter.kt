@@ -13,7 +13,7 @@ import com.fanalite.rulesapp.models.RegexModel
 /**
  * An adapter class for RulesList adapter.
  */
-open class RulesListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class RulesListAdapter(val fragment: RulesListFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private class RuleViewHolder(val binding: ItemRuleLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     private var rulesList = emptyList<RegexModel>()
@@ -31,6 +31,10 @@ open class RulesListAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         with (holder as RuleViewHolder) {
             with (rulesList[position]) {
                 binding.tvItemName.text = name
+
+                binding.ibDeleteProduct.setOnClickListener {
+                    fragment.deleteRule(position)
+                }
             }
         }
     }
