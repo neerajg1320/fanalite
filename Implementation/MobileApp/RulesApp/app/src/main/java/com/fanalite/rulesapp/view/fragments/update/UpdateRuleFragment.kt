@@ -40,7 +40,18 @@ class UpdateRuleFragment : Fragment() {
 
         val regexModel = args.currentItem
 
-        binding.etName.setText("Hello")
+        Log.d(TAG, "regexModel: ${regexModel}")
+
+        binding.etName.setText(regexModel.title)
+
+        when (regexModel.language) {
+            Language.JAVA ->
+                binding.rbJava.isChecked = true
+            Language.PYTHON ->
+                binding.rbPython.isChecked = true
+            else ->
+                Log.e(TAG, "Language: ${regexModel.language} not supported")
+        }
         binding.etRegex.setText(regexModel.regex)
 
         binding.btnRegexAdd.setOnClickListener {
@@ -68,16 +79,16 @@ class UpdateRuleFragment : Fragment() {
             }
 
 
-            val regexModel = RegexModel(0, regexName, language, regexStr)
+            val regexModel = RegexModel(args.currentItem.id, regexName, language, regexStr)
             Log.d(TAG, "regexModel: ${regexModel}")
 
             // We are assuming add at top
-            mRegexViewModel.insertData(regexModel)
+            mRegexViewModel.updateData(regexModel)
 
             Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
 
             //Navigate back to ListFragment
-            findNavController().navigate(R.id.action_addRuleFragment_to_rulesListFragment)
+            findNavController().navigate(R.id.action_updateRuleFragment_to_rulesListFragment)
         }
     }
 
