@@ -9,4 +9,9 @@
     <dimen name="button_background_radius">10dp</dimen>
     <dimen name="btn_padding">8dp</dimen>
     <dimen name="btn_textSize">18sp</dimen>
+    <dimen name="item_list_marginTop">16dp</dimen>
+    <dimen name="item_list_padding">10dp</dimen>
+    <dimen name="item_image_padding">2dp</dimen>
+    <dimen name="item_image_width">80dp</dimen>
+    <dimen name="item_image_height">70dp</dimen>
 </resources>
