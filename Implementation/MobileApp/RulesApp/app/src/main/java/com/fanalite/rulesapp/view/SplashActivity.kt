@@ -3,12 +3,10 @@ package com.fanalite.rulesapp.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.fanalite.rulesapp.R
-import com.fanalite.rulesapp.repository.RegexRemoteRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

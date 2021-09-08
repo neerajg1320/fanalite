@@ -10,16 +10,15 @@ import com.fanalite.rulesapp.retrofitRegex.RegexService
 import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
-import com.fanalite.rulesapp.repository.RegexRemoteRepository
-import com.fanalite.rulesapp.repository.RegexRepository
+import com.fanalite.rulesapp.repository.RemoteFirebaseRepository
+import com.fanalite.rulesapp.repository.RegexLocalRoomRepository
 import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.*
-import java.util.*
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
-    private val localRepository = RegexRepository(regexDao)
-    private val remoteRepository = RegexRemoteRepository()
+    private val localRepository = RegexLocalRoomRepository(regexDao)
+    private val remoteRepository = RemoteFirebaseRepository()
 
     var job: Job? = null
     private val regexService = RegexService.getRegexService()
@@ -31,7 +30,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     fun queryData() {
         // return localRepository.getAllData
         viewModelScope.launch(Dispatchers.IO) {
-            val regexList = remoteRepository.getAllData()
+            val regexList:List<RegexModel> = remoteRepository.getAllData(RegexModel::class.java) as List<RegexModel>
             Log.d(TAG, "RegexViewModel: regexList: $regexList")
             withContext(Dispatchers.Main) {
                 allData.setValue(regexList)
@@ -45,7 +44,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
         validateRegex(regexModel.regex)
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.insertData(regexModel)
-            remoteRepository.insertData(regexModel)
+            remoteRepository.insertData(regexModel.id, regexModel)
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
@@ -56,7 +55,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     fun updateData(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.updateData(regexModel)
-            remoteRepository.updateData(regexModel)
+            remoteRepository.updateData(regexModel.id, regexModel)
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
@@ -67,7 +66,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     fun deleteItem(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.deleteItem(regexModel)
-            remoteRepository.deleteData(regexModel)
+            remoteRepository.deleteData(regexModel.id)
             withContext(Dispatchers.Main) {
                 // Inform the view
             }

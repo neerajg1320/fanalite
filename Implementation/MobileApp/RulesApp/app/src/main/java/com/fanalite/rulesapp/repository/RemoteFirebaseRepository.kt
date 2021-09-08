@@ -1,7 +1,6 @@
 package com.fanalite.rulesapp.repository
 
 import android.util.Log
-import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.view.TAG
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -10,7 +9,7 @@ import com.google.firebase.database.*
 import kotlinx.coroutines.tasks.await
 
 
-class RegexRemoteRepository {
+class RemoteFirebaseRepository {
     private var authentication: FirebaseAuth? = null
     private var database: FirebaseDatabase
     private var regexRef: DatabaseReference
@@ -62,31 +61,32 @@ class RegexRemoteRepository {
         }
     }
 
-    suspend fun getAllData(): List<RegexModel>? {
-        val regexList = mutableListOf<RegexModel>()
+    suspend fun <T> getAllData(clazz: Class<T>): List<Any> {
+        val regexList = mutableListOf<Any>()
 
         val snapshot: DataSnapshot = regexRef.get().await()
         snapshot.children.forEach { child ->
-            regexList.add(child.getValue(RegexModel::class.java)!!)
+            regexList.add(child.getValue(clazz)!!)
         }
 
         return regexList
     }
 
+
     fun generateId():String {
         return regexRef.push().key!!
     }
 
-    suspend fun insertData(data: RegexModel) {
-        regexRef.child(data.id).setValue(data).await()
+    suspend fun insertData(id:String, data: Any) {
+        regexRef.child(id).setValue(data).await()
     }
 
-    suspend fun updateData(data: RegexModel) {
-        regexRef.child(data.id).setValue(data).await()
+    suspend fun updateData(id:String, data: Any) {
+        regexRef.child(id).setValue(data).await()
     }
 
-    suspend fun deleteData(data: RegexModel) {
-        regexRef.child(data.id).removeValue().await()
+    suspend fun deleteData(id:String) {
+        regexRef.child(id).removeValue().await()
     }
 
     suspend fun deleteAll() {

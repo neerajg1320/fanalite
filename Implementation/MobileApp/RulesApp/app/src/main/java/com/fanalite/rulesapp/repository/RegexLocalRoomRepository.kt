@@ -5,7 +5,7 @@ import com.fanalite.rulesapp.roomAppDatabase.RegexDao
 import com.fanalite.rulesapp.models.RegexModel
 import java.util.*
 
-class RegexRepository (private val todoDao: RegexDao){
+class RegexLocalRoomRepository (private val todoDao: RegexDao){
     val getAllData: LiveData<List<RegexModel>> = todoDao.getAllData()
 
     fun generateId():String {
