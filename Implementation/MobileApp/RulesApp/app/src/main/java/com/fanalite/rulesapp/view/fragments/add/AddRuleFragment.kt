@@ -62,17 +62,21 @@ class AddRuleFragment : Fragment() {
                 }
             }
 
-            val id: String = mRegexViewModel.generateId()
-            val regexModel = RegexModel(id, regexName, language, regexStr)
-            Log.d(TAG, "regexModel: $regexModel")
+            val id: String? = mRegexViewModel.generateId()
 
-            // We are assuming add at top
-            mRegexViewModel.insertData(regexModel)
+            id?.let {
+                val regexModel = RegexModel(it, regexName, language, regexStr)
+                Log.d(TAG, "regexModel: $regexModel")
 
-            Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
+                // We are assuming add at top
+                mRegexViewModel.insertData(regexModel)
 
-            //Navigate back to ListFragment
-            findNavController().navigate(R.id.action_addRuleFragment_to_rulesListFragment)
+                Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
+
+                //Navigate back to ListFragment
+                findNavController().navigate(R.id.action_addRuleFragment_to_rulesListFragment)
+
+            }
         }
     }
 

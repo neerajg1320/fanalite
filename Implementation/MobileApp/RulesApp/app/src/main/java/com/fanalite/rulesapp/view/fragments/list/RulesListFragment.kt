@@ -43,7 +43,7 @@ class RulesListFragment : Fragment() {
 
         createRecyclerView()
 
-        mRegexViewModel.allData.observe(viewLifecycleOwner, Observer { dataList ->
+        mRegexViewModel.allData?.observe(viewLifecycleOwner, Observer { dataList ->
             dataList.let {
                 Log.d(TAG, "mRegexViewModel.Observer(): dataList:size= ${dataList.size}")
                 it.forEach {

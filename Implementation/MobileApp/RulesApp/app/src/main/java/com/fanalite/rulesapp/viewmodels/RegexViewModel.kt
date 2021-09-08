@@ -21,31 +21,63 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val localRepository = RegexLocalRoomRepository(regexDao)
     private val remoteRepository = RemoteFirebaseRepository()
 
-    var job: Job? = null
+    private val localEnabled = true
+    private val remoteEnabled = false
 
-    // val getAllData: LiveData<List<RegexModel>> = localRepository.getAllData
+    private var job: Job? = null
+    private val mutableLiveData: MutableLiveData<List<RegexModel>> = MutableLiveData()
 
-    var allData: MutableLiveData<List<RegexModel>> = MutableLiveData()
+    var allData:LiveData<List<RegexModel>>? = null
+
+    init {
+        if (localEnabled) {
+            allData = localRepository.getAllData
+        }
+        if (remoteEnabled) {
+            allData = mutableLiveData
+        }
+    }
 
     fun queryData() {
-        // return localRepository.getAllData
-        viewModelScope.launch(Dispatchers.IO) {
-            val regexList:List<RegexModel> = remoteRepository.getAllData(RegexModel::class.java) as List<RegexModel>
-            Log.d(TAG, "RegexViewModel: regexList: $regexList")
-            withContext(Dispatchers.Main) {
-                allData.setValue(regexList)
+        if (remoteEnabled) {
+            viewModelScope.launch(Dispatchers.IO) {
+                var regexList: List<RegexModel> = emptyList()
+
+
+                regexList = remoteRepository.getAllData(RegexModel::class.java) as List<RegexModel>
+
+
+                Log.d(TAG, "RegexViewModel: regexList: $regexList")
+                withContext(Dispatchers.Main) {
+                    mutableLiveData.setValue(regexList)
+                }
             }
         }
     }
 
-    fun generateId() = remoteRepository.generateId()
+    fun generateId(): String? {
+        var id: String? = null
+
+        if (localEnabled) {
+            id = localRepository.generateId()
+        }
+        if (remoteEnabled) {
+            id = remoteRepository.generateId()
+        }
+
+        return id
+    }
 
     fun insertData(regexModel: RegexModel) {
         validateRegex(regexModel.regex, regexModel.language)
 
         viewModelScope.launch(Dispatchers.IO) {
-            // localRepository.insertData(regexModel)
-            remoteRepository.insertData(regexModel.id, regexModel)
+            if (localEnabled) {
+                localRepository.insertData(regexModel)
+            }
+            if (remoteEnabled) {
+                remoteRepository.insertData(regexModel.id, regexModel)
+            }
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
@@ -55,8 +87,12 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
 
     fun updateData(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            // localRepository.updateData(regexModel)
-            remoteRepository.updateData(regexModel.id, regexModel)
+            if (localEnabled) {
+                localRepository.updateData(regexModel)
+            }
+            if (remoteEnabled) {
+                remoteRepository.updateData(regexModel.id, regexModel)
+            }
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
@@ -66,8 +102,12 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
 
     fun deleteItem(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            // localRepository.deleteItem(regexModel)
-            remoteRepository.deleteData(regexModel.id)
+            if (localEnabled) {
+                localRepository.deleteItem(regexModel)
+            }
+            if (remoteEnabled) {
+                remoteRepository.deleteData(regexModel.id)
+            }
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
@@ -77,8 +117,12 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
 
     fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO) {
-            // localRepository.deleteAll()
-            remoteRepository.deleteAll()
+            if (localEnabled) {
+                localRepository.deleteAll()
+            }
+            if (remoteEnabled) {
+                remoteRepository.deleteAll()
+            }
             withContext(Dispatchers.Main) {
                 // Inform the view
             }
