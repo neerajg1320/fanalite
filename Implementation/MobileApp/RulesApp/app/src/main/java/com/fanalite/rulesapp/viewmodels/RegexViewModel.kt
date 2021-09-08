@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.fanalite.rulesapp.models.Language
 import com.fanalite.rulesapp.retrofitRegex.RegexService
 import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
@@ -21,7 +22,6 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val remoteRepository = RemoteFirebaseRepository()
 
     var job: Job? = null
-    private val regexService = RegexService.getRegexService()
 
     // val getAllData: LiveData<List<RegexModel>> = localRepository.getAllData
 
@@ -41,7 +41,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     fun generateId() = remoteRepository.generateId()
 
     fun insertData(regexModel: RegexModel) {
-        validateRegex(regexModel.regex)
+        validateRegex(regexModel.regex, regexModel.language)
+
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.insertData(regexModel)
             remoteRepository.insertData(regexModel.id, regexModel)
@@ -101,21 +102,28 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
         Log.d(TAG, "Exception: ${throwable.localizedMessage}")
     }
 
-    fun validateRegex(regexStr: String) {
+    fun validateRegex(regexStr: String, language: Language) {
+        val regexService = when (language) {
+                Language.JAVA -> RegexService.getRegexJavaApi()
+                Language.PYTHON -> RegexService.getRegexPythonApi()
+                else -> null
+            }
 
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val regexRequest = RegexValidateRequest(regexStr)
-            val response = regexService.validateRegex(regexRequest)
+        regexService?.let { service ->
+            job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+                val regexRequest = RegexValidateRequest(regexStr)
+                val response = service.validateRegex(regexRequest)
 
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    val regexValidateResponse =  response.body()
-                    if (regexValidateResponse?.status == "SUCCESS") {
-                        val regexValidateResult = regexValidateResponse?.result
-                        Log.d(TAG, "Regex Service Response: ${regexValidateResult}")
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        val regexValidateResponse = response.body()
+                        if (regexValidateResponse?.status == "SUCCESS") {
+                            val regexValidateResult = regexValidateResponse?.result
+                            Log.d(TAG, "Regex Service Response: ${regexValidateResult}")
+                        }
+                    } else {
+                        Log.d(TAG, "Error: ${response.message()}")
                     }
-                } else {
-                    Log.d(TAG, "Error: ${response.message()}")
                 }
             }
         }

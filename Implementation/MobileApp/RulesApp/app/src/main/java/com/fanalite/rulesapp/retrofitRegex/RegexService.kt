@@ -7,12 +7,20 @@ object RegexService {
     private const val HOST = "192.168.1.134"
     private const val JAVA_PORT = "8080"
     private const val PYTHON_PORT = "8090"
-    private val JAVA_BASE_URL = "http://${HOST}:${JAVA_PORT}"
-    private val PYTHON_BASE_URL = "http://${HOST}:${PYTHON_PORT}"
+    private const val JAVA_BASE_URL = "http://${HOST}:${JAVA_PORT}"
+    private const val PYTHON_BASE_URL = "http://${HOST}:${PYTHON_PORT}"
 
-    fun getRegexService(): RegexApi {
+    fun getRegexJavaApi(): RegexApi {
         return Retrofit.Builder()
             .baseUrl(JAVA_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(RegexApi::class.java)
+    }
+
+    fun getRegexPythonApi(): RegexApi {
+        return Retrofit.Builder()
+            .baseUrl(PYTHON_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RegexApi::class.java)
