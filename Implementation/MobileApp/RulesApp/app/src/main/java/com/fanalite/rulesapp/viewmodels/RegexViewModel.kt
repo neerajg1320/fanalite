@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.fanalite.rulesapp.api.RegexService
-import com.fanalite.rulesapp.api.models.RegexValidateRequest
-import com.fanalite.rulesapp.database.AppDatabase
+import com.fanalite.rulesapp.retrofitRegex.RegexService
+import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
+import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.repository.RegexRepository
 import com.fanalite.rulesapp.view.TAG

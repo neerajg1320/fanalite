@@ -1,7 +1,7 @@
-package com.fanalite.rulesapp.api
+package com.fanalite.rulesapp.retrofitRegex
 
-import com.fanalite.rulesapp.api.models.RegexValidateRequest
-import com.fanalite.rulesapp.api.models.RegexValidateResponse
+import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
+import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

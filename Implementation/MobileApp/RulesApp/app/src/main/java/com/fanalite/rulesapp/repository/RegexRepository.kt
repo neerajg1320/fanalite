@@ -1,7 +1,7 @@
 package com.fanalite.rulesapp.repository
 
 import androidx.lifecycle.LiveData
-import com.fanalite.rulesapp.database.RegexDao
+import com.fanalite.rulesapp.roomAppDatabase.RegexDao
 import com.fanalite.rulesapp.models.RegexModel
 
 class RegexRepository (private val todoDao: RegexDao){

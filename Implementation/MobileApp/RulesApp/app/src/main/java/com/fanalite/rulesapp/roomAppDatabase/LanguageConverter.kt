@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.database
+package com.fanalite.rulesapp.roomAppDatabase
 
 import androidx.room.TypeConverter
 import com.fanalite.rulesapp.models.Language

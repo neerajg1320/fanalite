@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.api
+package com.fanalite.rulesapp.retrofitRegex
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
