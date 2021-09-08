@@ -8,8 +8,8 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "regex_table")
 @Parcelize
 data class RegexModel (
-    @PrimaryKey(autoGenerate = true)
-    var id:Int,
+    @PrimaryKey()
+    var id:String,
     val title:String,
     val language:Language,
     val regex:String

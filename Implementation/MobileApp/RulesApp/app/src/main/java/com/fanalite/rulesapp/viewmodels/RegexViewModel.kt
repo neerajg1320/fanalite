@@ -9,41 +9,47 @@ import com.fanalite.rulesapp.retrofitRegex.RegexService
 import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
+import com.fanalite.rulesapp.repository.RegexRemoteRepository
 import com.fanalite.rulesapp.repository.RegexRepository
 import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.*
+import java.util.*
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
-    private val repository: RegexRepository = RegexRepository(regexDao)
+    private val localRepository = RegexRepository(regexDao)
+    private val remoteRepository = RegexRemoteRepository()
 
     var job: Job? = null
     private val regexService = RegexService.getRegexService()
 
-    val getAllData: LiveData<List<RegexModel>> = repository.getAllData
+    val getAllData: LiveData<List<RegexModel>> = localRepository.getAllData
+
+    fun generateId() = localRepository.generateId()
 
     fun insertData(regexModel: RegexModel) {
         validateRegex(regexModel.regex)
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertData(regexModel)
+            // localRepository.insertData(regexModel)
+            remoteRepository.insertData(remoteRepository.generateId(), regexModel)
         }
     }
 
     fun updateData(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateData(regexModel)
+            localRepository.updateData(regexModel)
         }
     }
 
     fun deleteItem(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteItem(regexModel)
+            localRepository.deleteItem(regexModel)
         }
     }
 
     fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
+            localRepository.deleteAll()
         }
     }
 

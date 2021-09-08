@@ -17,6 +17,7 @@ import com.fanalite.rulesapp.viewmodels.RegexViewModel
 import com.fanalite.rulesapp.models.Language
 
 import com.fanalite.rulesapp.models.RegexModel
+import java.util.*
 
 
 /**
@@ -61,9 +62,9 @@ class AddRuleFragment : Fragment() {
                 }
             }
 
-
-            val regexModel = RegexModel(0, regexName, language, regexStr)
-            Log.d(TAG, "regexModel: ${regexModel}")
+            val id: String = mRegexViewModel.generateId()
+            val regexModel = RegexModel(id, regexName, language, regexStr)
+            Log.d(TAG, "regexModel: $regexModel")
 
             // We are assuming add at top
             mRegexViewModel.insertData(regexModel)
