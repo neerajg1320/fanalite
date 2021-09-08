@@ -1,0 +1,159 @@
+{
+  "project_info": {
+    "project_number": "622099335644",
+    "firebase_url": "https://fana-4e7be-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fana-4e7be",
+    "storage_bucket": "fana-4e7be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622099335644:android:a0b6bc0850f9e5a0e66719",
+        "android_client_info": {
+          "package_name": "com.example.firebaseauthdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622099335644-0it9qreb8h9404io2edkcqfhn332dthj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firebaseauthdemo",
+            "certificate_hash": "4a88471aed65d78c65e47458d1ccea7c8bd4d1bc"
+          }
+        },
+        {
+          "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9QzmtpG6n6KRat-sEYQfMgiOl2-iEH-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622099335644:android:4d86300ef77f7de3e66719",
+        "android_client_info": {
+          "package_name": "com.example.imageassetdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622099335644-66lk1h7aha308htit6kkhp5b9c4lhpd5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.imageassetdemo",
+            "certificate_hash": "4a88471aed65d78c65e47458d1ccea7c8bd4d1bc"
+          }
+        },
+        {
+          "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9QzmtpG6n6KRat-sEYQfMgiOl2-iEH-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622099335644:android:ac9f1747d60c69eae66719",
+        "android_client_info": {
+          "package_name": "com.fanalite.rulesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622099335644-iecusu447bmq2qgk33o5rv57tllkh3iq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fanalite.rulesapp",
+            "certificate_hash": "4a88471aed65d78c65e47458d1ccea7c8bd4d1bc"
+          }
+        },
+        {
+          "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9QzmtpG6n6KRat-sEYQfMgiOl2-iEH-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622099335644:android:de26a461a6cca0d3e66719",
+        "android_client_info": {
+          "package_name": "com.myshoppal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622099335644-vbm657m3b2k8h91m1fr6invl9cbv3csd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myshoppal",
+            "certificate_hash": "4a88471aed65d78c65e47458d1ccea7c8bd4d1bc"
+          }
+        },
+        {
+          "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9QzmtpG6n6KRat-sEYQfMgiOl2-iEH-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622099335644-d5l5i1fp67hghiv10tpr1lqpiieeq9ri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
