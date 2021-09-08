@@ -9,6 +9,9 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.fanalite.rulesapp.R
 import com.fanalite.rulesapp.repository.RegexRemoteRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 //@Suppress("DEPRECATION")
 class SplashActivity : AppCompatActivity() {
@@ -20,11 +23,11 @@ class SplashActivity : AppCompatActivity() {
         val slideAnimation = AnimationUtils.loadAnimation(this, R.anim.side_slide)
         backgroundImage.startAnimation(slideAnimation)
 
-        Handler().postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+        GlobalScope.launch {
+            delay(2000)
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()
-        }, 2000) // 3000 is the delayed time in milliseconds.
+        }
     }
 }
 
