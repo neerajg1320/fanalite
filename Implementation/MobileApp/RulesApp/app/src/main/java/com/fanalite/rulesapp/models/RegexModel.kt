@@ -13,4 +13,7 @@ data class RegexModel (
     val title:String,
     val language:Language,
     val regex:String
-): Parcelable
+): Parcelable {
+    // For Firebase retrieve Map to RegexModel
+    constructor() : this("","",Language.UNKNOWN, "")
+}

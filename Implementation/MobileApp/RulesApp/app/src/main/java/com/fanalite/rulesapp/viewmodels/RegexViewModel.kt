@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.fanalite.rulesapp.retrofitRegex.RegexService
 import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
@@ -23,15 +24,31 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     var job: Job? = null
     private val regexService = RegexService.getRegexService()
 
-    val getAllData: LiveData<List<RegexModel>> = localRepository.getAllData
+    // val getAllData: LiveData<List<RegexModel>> = localRepository.getAllData
 
-    fun generateId() = localRepository.generateId()
+    var allData: MutableLiveData<List<RegexModel>> = MutableLiveData()
+
+    fun queryData() {
+        // return localRepository.getAllData
+        viewModelScope.launch(Dispatchers.IO) {
+            val regexList = remoteRepository.getAllData()
+            Log.d(TAG, "RegexViewModel: regexList: $regexList")
+            withContext(Dispatchers.Main) {
+                allData.setValue(regexList)
+            }
+        }
+    }
+
+    fun generateId() = remoteRepository.generateId()
 
     fun insertData(regexModel: RegexModel) {
         validateRegex(regexModel.regex)
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.insertData(regexModel)
-            remoteRepository.insertData(remoteRepository.generateId(), regexModel)
+            remoteRepository.insertData(regexModel.id, regexModel)
+            withContext(Dispatchers.Main) {
+                // Inform the
+            }
         }
     }
 

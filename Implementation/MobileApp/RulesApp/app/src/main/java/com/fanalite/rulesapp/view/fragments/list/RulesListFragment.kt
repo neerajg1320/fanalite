@@ -43,24 +43,28 @@ class RulesListFragment : Fragment() {
 
         createRecyclerView()
 
-        mRegexViewModel.getAllData.observe(viewLifecycleOwner, Observer { dataList ->
-            Log.d(TAG, "mRegexViewModel.Observer(): dataList:size= ${dataList.size}")
-            dataList.forEach {
-                Log.d(TAG, it.toString())
-            }
+        mRegexViewModel.allData.observe(viewLifecycleOwner, Observer { dataList ->
+            dataList.let {
+                Log.d(TAG, "mRegexViewModel.Observer(): dataList:size= ${dataList.size}")
+                it.forEach {
+                    Log.d(TAG, it.toString())
+                }
 
-            if (dataList.isNotEmpty()) {
-                binding.ivNoData.visibility = View.GONE
-                binding.tvNoData.visibility = View.GONE
-                binding.rvRulesList.visibility = View.VISIBLE
-            } else {
-                binding.ivNoData.visibility = View.VISIBLE
-                binding.tvNoData.visibility = View.VISIBLE
-                binding.rvRulesList.visibility = View.GONE
-            }
+                if (it.isNotEmpty()) {
+                    binding.ivNoData.visibility = View.GONE
+                    binding.tvNoData.visibility = View.GONE
+                    binding.rvRulesList.visibility = View.VISIBLE
+                } else {
+                    binding.ivNoData.visibility = View.VISIBLE
+                    binding.tvNoData.visibility = View.VISIBLE
+                    binding.rvRulesList.visibility = View.GONE
+                }
 
-            adapter.setData(dataList)
+                adapter.setData(it)
+            }
         })
+
+        mRegexViewModel.queryData()
 
         return binding.root
     }

@@ -1,13 +1,13 @@
 package com.fanalite.rulesapp.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.view.TAG
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.coroutines.tasks.await
 
 
 class RegexRemoteRepository {
@@ -62,14 +62,33 @@ class RegexRemoteRepository {
         }
     }
 
-    fun generateId():String? {
-        return regexRef.push().key
+    suspend fun getAllData(): List<RegexModel>? {
+        val regexList = mutableListOf<RegexModel>()
+
+        val snapshot: DataSnapshot = regexRef.get().await()
+        snapshot.children.forEach { child ->
+            regexList.add(child.getValue(RegexModel::class.java)!!)
+        }
+
+        return regexList
     }
 
-    fun insertData(id:String?, data: RegexModel): String? {
-        var newId = id?:generateId()
+    fun generateId():String {
+        return regexRef.push().key!!
+    }
 
-        newId?.let {
+    suspend fun insertData(id:String?, data: RegexModel): String? {
+        val newId = id?:generateId()
+
+        regexRef.child(newId).setValue(data).await()
+
+        return newId
+    }
+
+    fun insertDataOld(id:String?, data: RegexModel): String? {
+        val newId = id?:generateId()
+
+        newId.let {
             regexRef.child(it).setValue(data).addOnCompleteListener {
                 Log.d(TAG, "Firebase: Complete")
             }.addOnSuccessListener {
@@ -84,23 +103,9 @@ class RegexRemoteRepository {
         return id
     }
 
-    // Here we have return a List<RegexModel>
-    fun getData(id: String): Task<DataSnapshot> {
-        return regexRef.child(id).get().addOnSuccessListener {
-            Log.d(TAG, "Firebase: snapshot: $it")
-        }.addOnFailureListener {
-            Log.e(TAG, " Firebase: exception: ${it.localizedMessage}")
-        }
-    }
 
-    fun getAllData(): Task<DataSnapshot> {
-        return regexRef.get().addOnSuccessListener {
-            Log.d(TAG, "Firebase: snapshot: $it")
-        }.addOnFailureListener {
-            Log.e(TAG, " Firebase: exception: ${it.localizedMessage}")
-        }
 
-    }
+
 
 
 
