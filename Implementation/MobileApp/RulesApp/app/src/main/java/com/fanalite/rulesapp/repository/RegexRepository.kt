@@ -12,12 +12,6 @@ class RegexRepository (private val todoDao: RegexDao){
         return UUID.randomUUID().toString()
     }
 
-    // This function has been created for compatibility with Firebase API
-    suspend fun insertData(id:String, data: RegexModel) {
-        data.id = id
-        return insertData(data)
-    }
-
     // If we call this function then it must have an id
     suspend fun insertData(regexModel: RegexModel) {
         todoDao.insertData(regexModel)

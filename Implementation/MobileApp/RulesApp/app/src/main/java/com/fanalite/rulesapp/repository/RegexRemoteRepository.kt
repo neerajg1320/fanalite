@@ -77,44 +77,19 @@ class RegexRemoteRepository {
         return regexRef.push().key!!
     }
 
-    suspend fun insertData(id:String?, data: RegexModel): String? {
-        val newId = id?:generateId()
-
-        regexRef.child(newId).setValue(data).await()
-
-        return newId
+    suspend fun insertData(data: RegexModel) {
+        regexRef.child(data.id).setValue(data).await()
     }
 
-    fun insertDataOld(id:String?, data: RegexModel): String? {
-        val newId = id?:generateId()
-
-        newId.let {
-            regexRef.child(it).setValue(data).addOnCompleteListener {
-                Log.d(TAG, "Firebase: Complete")
-            }.addOnSuccessListener {
-                Log.d(TAG, "Firebase: Success")
-            }.addOnFailureListener {
-                Log.d(TAG, "Firebase: Failure")
-            }.addOnCanceledListener {
-                Log.d(TAG, "Firebase: Cancelled")
-            }
-        }
-
-        return id
+    suspend fun updateData(data: RegexModel) {
+        regexRef.child(data.id).setValue(data).await()
     }
 
-
-
-
-
-
-
-    fun updateData(regexModel: RegexModel) {
-
+    suspend fun deleteData(data: RegexModel) {
+        regexRef.child(data.id).removeValue().await()
     }
 
-    fun deleteData(regexModel: RegexModel) {
-        regexRef.child(regexModel.id)
+    suspend fun deleteAll() {
+        regexRef.removeValue().await()
     }
-
 }

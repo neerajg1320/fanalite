@@ -45,28 +45,44 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
         validateRegex(regexModel.regex)
         viewModelScope.launch(Dispatchers.IO) {
             // localRepository.insertData(regexModel)
-            remoteRepository.insertData(regexModel.id, regexModel)
+            remoteRepository.insertData(regexModel)
             withContext(Dispatchers.Main) {
-                // Inform the
+                // Inform the view
             }
+            queryData()
         }
     }
 
     fun updateData(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            localRepository.updateData(regexModel)
+            // localRepository.updateData(regexModel)
+            remoteRepository.updateData(regexModel)
+            withContext(Dispatchers.Main) {
+                // Inform the view
+            }
+            queryData()
         }
     }
 
     fun deleteItem(regexModel: RegexModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            localRepository.deleteItem(regexModel)
+            // localRepository.deleteItem(regexModel)
+            remoteRepository.deleteData(regexModel)
+            withContext(Dispatchers.Main) {
+                // Inform the view
+            }
+            queryData()
         }
     }
 
     fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO) {
-            localRepository.deleteAll()
+            // localRepository.deleteAll()
+            remoteRepository.deleteAll()
+            withContext(Dispatchers.Main) {
+                // Inform the view
+            }
+            queryData()
         }
     }
 
