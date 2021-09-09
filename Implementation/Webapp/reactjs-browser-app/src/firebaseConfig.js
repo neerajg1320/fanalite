@@ -12,6 +12,9 @@ const firebaseConfig = {
   };
 
   firebase.initializeApp(firebaseConfig);
-  var database = firebase.database();
+  export const database = firebase.database();
 
-  export default database;
+  // Udemy: Andre, Yihua
+
+
+
