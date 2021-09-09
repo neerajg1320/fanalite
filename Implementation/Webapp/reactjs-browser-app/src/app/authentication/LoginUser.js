@@ -2,6 +2,7 @@ import './Login.css';
 import PropTypes from 'prop-types';
 
 import {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 
 
 const sleep = (milliseconds) => {
@@ -33,6 +34,8 @@ function LoginUser({setToken}) {
     const [password, setPassword] = useState();
 
   
+    const history = useHistory();
+
     const handleSubmit = async e => {
       e.preventDefault();
       const token = await loginUser({
@@ -41,6 +44,8 @@ function LoginUser({setToken}) {
       });
       console.log("token=", token)
       setToken(token);
+
+      history.push('/dashboard');
     }
     
     return (

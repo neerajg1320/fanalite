@@ -11,9 +11,16 @@ import './App.css';
 import Login from './authentication/Login';
 import Dashboard from './Dashboard';
 import About from './About';
+import LoginUser from './authentication/LoginUser';
 
 
 function App() {
+  
+
+  const loginSuccess = (token) => {
+    console.log("Login Success: token=", token);
+  }
+
   return (
     <Router>
     <div>
@@ -40,7 +47,7 @@ function App() {
       */}
       <Switch>
         <Route exact path="/login">
-          <Login />
+          <LoginUser setToken={loginSuccess}/>
         </Route>
         <Route path="/dashboard">
           <Dashboard />
