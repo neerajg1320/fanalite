@@ -21,8 +21,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val localRepository = RegexLocalRoomRepository(regexDao)
     private val remoteRepository = RemoteFirebaseRepository()
 
-    private val localEnabled = true
-    private val remoteEnabled = false
+    private val localEnabled = false
+    private val remoteEnabled = true
 
     private var job: Job? = null
     private val mutableLiveData: MutableLiveData<List<RegexModel>> = MutableLiveData()
