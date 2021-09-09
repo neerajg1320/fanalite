@@ -8,8 +8,8 @@ import AppRouterSample from './app/samples/AppRouterSample';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <AppRouterSample />
+    <App />
+    {/* <AppRouterSample /> */}
   </React.StrictMode>,
   document.getElementById('root')
 );
