@@ -13,9 +13,11 @@ function Regex() {
     const resource = 'regexModels';
 
     const [regexList, setRegexList] = useState([]);
-    const [input, setInput] = useState('');
+    const [title, setTitle] = useState('');
+    const [regex, setRegex] = useState('');
     const [open, setOpen] = useState(false);
-    const [update, setUpdate] = useState('');
+    const [updateTitle, setUpdateTitle] = useState('');
+    const [updateRegex, setUpdateRegex] = useState('');
     const [currentId, setCurrentId] = useState('');
   
   
@@ -51,28 +53,36 @@ function Regex() {
     const addRegex = (event) => {
       event.preventDefault();
   
-      realtimeDatabase.ref(resource).push({
-        title: input,
+      const id = realtimeDatabase.ref(resource).push().key
+
+      realtimeDatabase.ref(resource).child(id).set({
+        id,
+        title,
+        regex, 
         datetime: firebase.database.ServerValue.TIMESTAMP
       })
   
       // Check if we can declare successful addition.
-      setInput('');
+      setTitle('');
+      setRegex('');
     }
   
     const deleteRegex = (id) => {
       realtimeDatabase.ref(resource).child(id).remove();
     }
   
-    const openUpdateDialog = (regex) => {
+    const openUpdateDialog = (regexItem) => {
       setOpen(true);
-      setCurrentId(regex.id);
-      setUpdate(regex.title);
+      setCurrentId(regexItem.id);
+      setUpdateTitle(regexItem.title);
+      setUpdateRegex(regexItem.regex);
     }
   
     const editRegex = () => {
       realtimeDatabase.ref(resource).child(currentId).set({
-        title: update,
+        id:currentId,
+        title: updateTitle,
+        regex: updateRegex,
         datetime: firebase.database.ServerValue.TIMESTAMP
       })
       setOpen(false);
@@ -86,32 +96,46 @@ function Regex() {
       <Container maxWidth="sm">
   
         <form noValidate>
-  
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="regex"
-            label="Enter Regualar Expression"
-            name="regex"
-            autoFocus
-            value={input}
-            onChange={event => setInput(event.target.value)}
-          />
-  
+          <div>
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="regex"
+                label="Title"
+                name="regex"
+                autoFocus
+                value={title}
+                onChange={event => setTitle(event.target.value)}
+            />
+    
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="regex"
+                label="Regular Expression"
+                name="regex"
+                autoFocus
+                value={regex}
+                onChange={event => setRegex(event.target.value)}
+            />
+          </div>
+          <div style={{marginTop: "20px"}}></div>
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
             onClick={addRegex}
-            disabled={!input}
+            disabled={!title}
             startIcon={<AddCircleOutlineRounded />}
           >
             Add Regex
         </Button>
-  
+        <div style={{marginTop: "20px"}}></div>
         </form>
   
         <List dense={true}>
@@ -144,13 +168,23 @@ function Regex() {
             <TextField
               autoFocus
               margin="normal"
+              label="Update Title"
+              type="text"
+              fullWidth
+              name="updateTitle"
+              value={updateTitle}
+              onChange={event => setUpdateTitle(event.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="normal"
               label="Update Regex"
               type="text"
               fullWidth
               name="updateRegex"
-              value={update}
-              onChange={event => setUpdate(event.target.value)}
-            />
+              value={updateRegex}
+              onChange={event => setUpdateRegex(event.target.value)}
+            /> 
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
