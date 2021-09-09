@@ -1,42 +1,38 @@
 import {useState, useEffect} from 'react';
-import '../App.css';
-
 import { signInWithGoogle, auth } from '../../firebaseConfig';
 
-function Login() {
-    const [currentUser,setCurrentUser] = useState();
+function Login({setToken}) {
+  const [currentUser,setCurrentUser] = useState();
 
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged( userAuth => {
-        setCurrentUser(userAuth);
-      });
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged( userAuth => {
+      setCurrentUser(userAuth);
+      if (userAuth) {
+        setToken("Token")
+      }
+    });
 
-      return () => { unsubscribe() }
-    },[currentUser])
-  
-    return (
-        <div className='user-info'>
-        {
+    return () => { unsubscribe() }
+  },[currentUser])
 
-            currentUser ?
-
-            (<div>
-                <div>
-                <img src={currentUser.photoURL} />
-                </div>
-                <div>Name: {currentUser.displayName}</div>
-                <div>Email: {currentUser.email}</div>
-
-                <button  onClick={() => auth.signOut()}>LOG OUT</button>
+  return (
+    <div className='login-wrapper'>
+    {
+        currentUser ?
+        (<div>
+            <div>
+            <img src={currentUser.photoURL} />
             </div>
-            ) :
+            <div>Name: {currentUser.displayName}</div>
+            <div>Email: {currentUser.email}</div>
 
-            <button onClick={signInWithGoogle}>SIGN IN WITH GOOGLE</button>
-
-        }
-        </div >
-    );
-
+            <button  onClick={() => auth.signOut()}>LOG OUT</button>
+        </div>
+        ) :
+        <button onClick={signInWithGoogle}>SIGN IN WITH GOOGLE</button>
+    }
+    </div >
+  );
 }
 
 export default Login;
