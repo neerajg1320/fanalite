@@ -10,45 +10,49 @@ import {format} from 'date-fns';
 
 
 function Regex() {
+    const resource = 'regexModels';
 
-    const [todos, setTodos] = useState([]);
+    const [regexList, setRegexList] = useState([]);
     const [input, setInput] = useState('');
     const [open, setOpen] = useState(false);
     const [update, setUpdate] = useState('');
-    const [toUpdateId, setToUpdateId] = useState('');
+    const [currentId, setCurrentId] = useState('');
   
   
     useEffect(() => {
       console.log('useEffect Hook!!!');
   
       // .once can be used for onetime only
-      realtimeDatabase.ref('todos').on('value', (snapshot) => {
-        const todos = snapshot.val();
-        const todoList = [];
-        for (let id in todos) {
-          const name = todos[id].name;
-          const datetime = todos[id].datetime;
-          
-          todoList.push({
+      realtimeDatabase.ref(resource).on('value', (snapshot) => {
+        const regexListSnaphot = snapshot.val();
+        const regexList = [];
+        for (let id in regexListSnaphot) {
+          const title = regexListSnaphot[id].title;
+          const regex = regexListSnaphot[id].regex;
+          const datetimeEpoch = regexListSnaphot[id].datetime;
+          const datetime = datetimeEpoch ? format(new Date(datetimeEpoch), 'yyyy/MM/dd HH:mm:ss SSS') : 'NA';
+
+          regexList.push({
             id, 
-            name, 
-            datetime: format(new Date(datetime), 'yyyy/MM/dd HH:mm:ss SSS')
+            title,
+            regex, 
+            datetime
           });
         }
         
-        console.log('todoList:', todoList);
+        console.log('regexList:', regexList);
         
-        setTodos(todoList);
+        setRegexList(regexList);
       })
   
     }, []);
   
     // On addition we get two value event with different timestamps
-    const addTodo = (event) => {
+    const addRegex = (event) => {
       event.preventDefault();
   
-      realtimeDatabase.ref('todos').push({
-        name: input,
+      realtimeDatabase.ref(resource).push({
+        title: input,
         datetime: firebase.database.ServerValue.TIMESTAMP
       })
   
@@ -56,19 +60,19 @@ function Regex() {
       setInput('');
     }
   
-    const deleteTodo = (id) => {
-      realtimeDatabase.ref('todos').child(id).remove();
+    const deleteRegex = (id) => {
+      realtimeDatabase.ref(resource).child(id).remove();
     }
   
-    const openUpdateDialog = (todo) => {
+    const openUpdateDialog = (regex) => {
       setOpen(true);
-      setToUpdateId(todo.id);
-      setUpdate(todo.name);
+      setCurrentId(regex.id);
+      setUpdate(regex.title);
     }
   
-    const editTodo = () => {
-      realtimeDatabase.ref('todos').child(toUpdateId).set({
-        name: update,
+    const editRegex = () => {
+      realtimeDatabase.ref(resource).child(currentId).set({
+        title: update,
         datetime: firebase.database.ServerValue.TIMESTAMP
       })
       setOpen(false);
@@ -88,9 +92,9 @@ function Regex() {
             margin="normal"
             required
             fullWidth
-            id="todo"
-            label="Enter ToDo"
-            name="todo"
+            id="regex"
+            label="Enter Regualar Expression"
+            name="regex"
             autoFocus
             value={input}
             onChange={event => setInput(event.target.value)}
@@ -101,31 +105,31 @@ function Regex() {
             variant="contained"
             color="primary"
             fullWidth
-            onClick={addTodo}
+            onClick={addRegex}
             disabled={!input}
             startIcon={<AddCircleOutlineRounded />}
           >
-            Add Todo
+            Add Regex
         </Button>
   
         </form>
   
         <List dense={true}>
           {
-            todos.map(todo => (
+            regexList.map(regexItem => (
   
-              <ListItem key={todo.id} >
+              <ListItem key={regexItem.id} >
   
                 <ListItemText
-                  primary={todo.name}
-                  secondary={todo.datetime}
+                  primary={regexItem.title}
+                  secondary={regexItem.regex}
                 />
   
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="Edit" onClick={() => openUpdateDialog(todo)}>
+                  <IconButton edge="end" aria-label="Edit" onClick={() => openUpdateDialog(regexItem)}>
                     <Edit />
                   </IconButton>
-                  <IconButton edge="end" aria-label="delete" onClick={() => deleteTodo(todo.id)}>
+                  <IconButton edge="end" aria-label="delete" onClick={() => deleteRegex(regexItem.id)}>
                     <DeleteOutlineRounded />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -140,10 +144,10 @@ function Regex() {
             <TextField
               autoFocus
               margin="normal"
-              label="Update Todo"
+              label="Update Regex"
               type="text"
               fullWidth
-              name="updateTodo"
+              name="updateRegex"
               value={update}
               onChange={event => setUpdate(event.target.value)}
             />
@@ -152,7 +156,7 @@ function Regex() {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={editTodo} color="primary">
+            <Button onClick={editRegex} color="primary">
               Save
             </Button>
           </DialogActions>
