@@ -9,22 +9,27 @@ import {
 import './App.css';
 
 import Login from './authentication/Login';
-import Dashboard from './Dashboard';
-import About from './About';
+import Dashboard from './pages/Dashboard';
+import About from './pages/About';
 import LoginUser from './authentication/LoginUser';
+import Home from './pages/Home';
 
+import { AuthContext } from './authentication/AuthContext';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
-  
-
   const loginSuccess = (token) => {
     console.log("Login Success: token=", token);
   }
 
   return (
+    <AuthContext.Provider value={false}>
     <Router>
     <div>
       <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
         <li>
           <Link to="/login">Login</Link>
         </li>
@@ -37,6 +42,7 @@ function App() {
       </ul>
 
       <hr />
+      
 
       {/*
         A <Switch> looks through all its children <Route>
@@ -46,18 +52,16 @@ function App() {
         of them to render at a time
       */}
       <Switch>
-        <Route exact path="/login">
+        <Route exact path="/" component={Home} />
+        <Route path="/login">
           <LoginUser setToken={loginSuccess}/>
         </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
-        <Route path="/about">
-          <About />
-        </Route>
+        <PrivateRoute path="/dashboard" component={Dashboard} />
+        <PrivateRoute path="/about" component={About} />
       </Switch>
     </div>
     </Router>
+    </AuthContext.Provider>
   )  
 }
 

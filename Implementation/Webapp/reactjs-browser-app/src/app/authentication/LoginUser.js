@@ -33,7 +33,6 @@ function LoginUser({setToken}) {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
 
-  
     const history = useHistory();
 
     const handleSubmit = async e => {
