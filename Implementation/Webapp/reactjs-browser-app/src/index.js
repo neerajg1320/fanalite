@@ -5,7 +5,6 @@ import App from './app/App';
 import AppRouterSample from './app/samples/AppRouterSample';
 
 
-
 ReactDOM.render(
   <React.StrictMode>
     <App />

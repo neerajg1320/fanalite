@@ -19,7 +19,7 @@ import { AuthContext } from './authentication/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import SigninForm from './authentication/SigninForm';
 import SignupForm from './authentication/SignupForm';
-import MainNavigation from './MainNavigatoin';
+import MainNavigation from './MainNavigation';
 
 function App() {
   const [authTokens, setAuthTokens] = useState();
