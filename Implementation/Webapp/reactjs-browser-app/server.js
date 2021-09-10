@@ -32,26 +32,28 @@ let apiLogger = (req, res, next) => {
     current_datetime.getSeconds();
   let method = req.method;
   let url = req.url;
-  let status = res.statusCode;
-  let log = `[${formatted_date}] ${method}:${url} ${status}`;
+  let log = `[${formatted_date}] ${method}:${url}`;
   console.log(log);
   next();
+  let status = res.statusCode;
+  log = `${status}`;
+  console.log(log);
 };
 
 // app.use(demoLogger);
 app.use(apiLogger);
 
 app.use('/login', (req, res) => {
-    console.log("req.body", req.body);
+  console.log("req.body", req.body);
 
+  if (req.body.userName === "alice") {
     res.send({
       token: 'test123'
     });
-});
+  } else {
+    res.status(401).send({})
+  }
 
-app.use('/badlogin', (req, res) => {
-  res.send({}, 401);
 });
-
 
 app.listen(8080, () => console.log('API is running on http://localhost:8080/login'));
