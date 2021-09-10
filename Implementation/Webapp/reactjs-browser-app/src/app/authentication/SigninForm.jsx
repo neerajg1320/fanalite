@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Link, Redirect } from "react-router-dom";
 import logoImg from "../../assets/Insights.png";
 import {Card, Logo, Form, Input, Button, Error} from './AuthForm';
@@ -10,7 +10,20 @@ function SigninForm() {
     const [isError, setIsError] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const { setAuthTokens } = useAuth();
+    const { authTokens, setAuthTokens } = useAuth();
+
+    // useEffect is watching authTokens for value change
+    // This is helpful in case when we directly enter to the 
+    // signin page in the browser. The SigninForm page's
+    // useEffect function is called before App's useEffect
+    // function. Hence we monitor for the setting of authTokens
+    // caused by App's useEffect function
+    useEffect(() => {
+        console.log("SigninForm: useEffect(): authTokens:", authTokens)
+        if(authTokens) {
+            setLoggedIn(true);
+        }
+    }, [authTokens]);
 
     function postLogin() {
         axios.post("http://localhost:8080/login", {
@@ -19,7 +32,7 @@ function SigninForm() {
         }).then(result => {
             console.log("result.status:", result.status)
             if (result.status === 200) {
-                setAuthTokens(result.data);
+                setAuthTokens(result.data)
                 setLoggedIn(true);
             } else {
                 setIsError(true);

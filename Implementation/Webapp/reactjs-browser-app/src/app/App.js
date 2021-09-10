@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
 import './App.css';
@@ -20,15 +21,31 @@ import SigninForm from './authentication/SigninForm';
 import SignupForm from './authentication/SignupForm';
 
 function App() {
-  const loginSuccess = (token) => {
-    console.log("Login Success: token=", token);
-  }
-
   const [authTokens, setAuthTokens] = useState();
   const setTokens = (data) => {
-    localStorage.setItem("tokens", JSON.stringify(data));
+    if (data) {
+      localStorage.setItem("tokens", JSON.stringify(data));
+    } else {
+      localStorage.removeItem("tokens");
+    }
     setAuthTokens(data);
   }
+
+  useEffect(() => {
+    const tokensJsonStr = localStorage.getItem("tokens");
+    console.log("App: useEffect(): tokensJsonStr:", tokensJsonStr)
+    if (tokensJsonStr) {
+      try {
+        const tokens = JSON.parse(tokensJsonStr);
+        console.log("App: useEffect(): tokens:", tokens)
+        setAuthTokens(tokens);
+
+      } catch(e) {
+        console.log("App: useEffect(): exception:", e.message)
+      }
+      
+    }
+  }, [])
 
   return (
     <AuthContext.Provider value={{authTokens, setAuthTokens: setTokens}}>
@@ -64,9 +81,6 @@ function App() {
       */}
       <Switch>
         <Route exact path="/" component={Home} />
-        {/* <Route path="/login">
-          <LoginUser setToken={loginSuccess}/>
-        </Route> */}
         <Route path="/signin" component={SigninForm} />
         <Route path="/signup" component={SignupForm} />
         <PrivateRoute path="/dashboard" component={Dashboard} />
