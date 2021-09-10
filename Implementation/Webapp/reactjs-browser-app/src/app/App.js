@@ -19,7 +19,7 @@ import { AuthContext } from './authentication/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import SigninForm from './authentication/SigninForm';
 import SignupForm from './authentication/SignupForm';
-import MainNavigation from './MainNavigation';
+import MainNavigation from './pages/MainNavigation';
 
 function App() {
   const [authTokens, setAuthTokens] = useState();
@@ -53,7 +53,7 @@ function App() {
     <Router>
     <div>
       <MainNavigation />
-      <hr />
+      <div style={{margin:"20px"}}></div>
       {/*
         A <Switch> looks through all its children <Route>
         elements and renders the first one whose path

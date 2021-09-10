@@ -15,6 +15,7 @@ export default function Dashboard() {
             <Card>
                 <Button onClick={signOut}>Sign Out</Button>
             </Card>
+            <div style={{margin:"40px"}}></div>
             <Regex/>
         </div>
     )
