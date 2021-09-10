@@ -5,6 +5,8 @@ import {Card, Logo, Form, Input, Button, Error} from './AuthForm';
 import { useAuth } from "./AuthContext";
 import axios from 'axios';
 
+import { firebaseAuth } from '../../firebaseConfig';
+
 function SigninForm() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -43,6 +45,18 @@ function SigninForm() {
         })
     }
 
+    function postFirebaseLogin() {
+        firebaseAuth.signInWithEmailAndPassword(userName, password)
+        .then((user) => {
+            console.log("Firebase: user: ", user);
+            setAuthTokens({token: "token123"});
+            setLoggedIn(true);
+        })
+        .catch((e) => {
+            console.log("Firebase: exception: ", e.message);
+        })        
+    }
+
     if (isLoggedIn) {
         return <Redirect to="/dashboard" />;
     }
@@ -53,7 +67,8 @@ function SigninForm() {
             <Form>
                 <Input type="email" placeholder="email" onChange={e => setUserName(e.target.value)} />
                 <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
-                <Button onClick={postLogin}>Sign In</Button>
+                {/* <Button onClick={postLogin}>Sign In</Button> */}
+                <Button onClick={postFirebaseLogin}>Sign In</Button>
             </Form>
             <Link to="/signup">Don't have an account?</Link>
             { isError && <Error>The username or password is incorrect</Error>}

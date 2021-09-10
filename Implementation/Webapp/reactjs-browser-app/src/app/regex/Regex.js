@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import firebase from 'firebase';
-import { database as realtimeDatabase } from '../../firebaseConfig'
+import { firebaseDatabase as realtimeDatabase } from '../../firebaseConfig'
 
 import { AddCircleOutlineRounded, DeleteOutlineRounded, Edit } from '@material-ui/icons';
 import { Button, TextField, Container, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, Dialog, DialogContent, DialogActions } from '@material-ui/core';

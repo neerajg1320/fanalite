@@ -1,11 +1,11 @@
 import {useState, useEffect} from 'react';
-import { signInWithGoogle, auth } from '../../firebaseConfig';
+import { signInWithGoogle, firebaseAuth } from '../../firebaseConfig';
 
 function Login({setToken}) {
   const [currentUser,setCurrentUser] = useState();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged( userAuth => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged( userAuth => {
       setCurrentUser(userAuth);
       if (userAuth) {
         setToken("Token")
@@ -26,7 +26,7 @@ function Login({setToken}) {
             <div>Name: {currentUser.displayName}</div>
             <div>Email: {currentUser.email}</div>
 
-            <button  onClick={() => auth.signOut()}>LOG OUT</button>
+            <button  onClick={() => firebaseAuth.signOut()}>LOG OUT</button>
         </div>
         ) :
         <button onClick={signInWithGoogle}>SIGN IN WITH GOOGLE</button>
