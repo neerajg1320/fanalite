@@ -22,8 +22,6 @@ function Regex() {
   
   
     useEffect(() => {
-      console.log('useEffect Hook!!!');
-  
       // .once can be used for onetime only
       realtimeDatabase.ref(resource).on('value', (snapshot) => {
         const regexListSnaphot = snapshot.val();
@@ -42,7 +40,7 @@ function Regex() {
           });
         }
         
-        console.log('regexList:', regexList);
+        // console.log('regexList:', regexList);
         
         setRegexList(regexList);
       })
