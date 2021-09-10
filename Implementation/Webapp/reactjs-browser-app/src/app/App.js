@@ -19,6 +19,7 @@ import { AuthContext } from './authentication/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import SigninForm from './authentication/SigninForm';
 import SignupForm from './authentication/SignupForm';
+import MainNavigation from './MainNavigatoin';
 
 function App() {
   const [authTokens, setAuthTokens] = useState();
@@ -51,27 +52,8 @@ function App() {
     <AuthContext.Provider value={{authTokens, setAuthTokens: setTokens}}>
     <Router>
     <div>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/signin">SignIn</Link>
-        </li>
-        <li>
-          <Link to="/signup">SignUp</Link>
-        </li>
-        <li>
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-      </ul>
-
+      <MainNavigation />
       <hr />
-      
-
       {/*
         A <Switch> looks through all its children <Route>
         elements and renders the first one whose path
