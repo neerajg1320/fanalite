@@ -16,6 +16,8 @@ import Home from './pages/Home';
 
 import { AuthContext } from './authentication/AuthContext';
 import PrivateRoute from './PrivateRoute';
+import SigninForm from './authentication/SigninForm';
+import SignupForm from './authentication/SignupForm';
 
 function App() {
   const loginSuccess = (token) => {
@@ -31,7 +33,10 @@ function App() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/login">Login</Link>
+          <Link to="/signin">SignIn</Link>
+        </li>
+        <li>
+          <Link to="/signup">SignUp</Link>
         </li>
         <li>
           <Link to="/dashboard">Dashboard</Link>
@@ -53,11 +58,13 @@ function App() {
       */}
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/login">
+        {/* <Route path="/login">
           <LoginUser setToken={loginSuccess}/>
-        </Route>
+        </Route> */}
+        <Route path="/signin" component={SigninForm} />
+        <Route path="/signup" component={SignupForm} />
         <PrivateRoute path="/dashboard" component={Dashboard} />
-        <PrivateRoute path="/about" component={About} />
+        <Route path="/about" component={About} />
       </Switch>
     </div>
     </Router>
