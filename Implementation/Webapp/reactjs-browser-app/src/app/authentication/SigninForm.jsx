@@ -5,6 +5,7 @@ import {Card, Logo, Form, Input, Button} from './AuthForm';
 
 
 function SigninForm() {
+    
     return (
         <Card>
             <Logo src={logoImg}/>
@@ -13,7 +14,7 @@ function SigninForm() {
                 <Input type="password" placeholder="password" />
                 <Button>Sign In</Button>
             </Form>
-            <Link to="signup">Don't have an account?</Link>
+            <Link to="/signup">Don't have an account?</Link>
         </Card>
     );
 }

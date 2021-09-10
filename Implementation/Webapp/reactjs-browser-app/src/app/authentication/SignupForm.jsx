@@ -14,7 +14,7 @@ function SignupForm() {
                 <Input type="password" placeholder="confirm password" />
                 <Button>Sign Up</Button>
             </Form>
-            <Link to="signup">Don't have an account?</Link>
+            <Link to="/signin">Already have an account?</Link>
         </Card>
     );
 }

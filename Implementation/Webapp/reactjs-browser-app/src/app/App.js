@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,8 +24,14 @@ function App() {
     console.log("Login Success: token=", token);
   }
 
+  const [authTokens, setAuthTokens] = useState();
+  const setTokens = (data) => {
+    localStorage.setItem("tokens", JSON.stringify(data));
+    setAuthTokens(data);
+  }
+
   return (
-    <AuthContext.Provider value={false}>
+    <AuthContext.Provider value={{authTokens, setAuthTokens: setTokens}}>
     <Router>
     <div>
       <ul>
