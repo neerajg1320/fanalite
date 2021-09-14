@@ -7,22 +7,13 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
-import stream.regex.RegexPlus;
-import stream.regex.RegexUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class RegexStreamProcessing
 {
-
-
-
     public static void main(String[] args) throws Exception
     {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -41,42 +32,6 @@ public class RegexStreamProcessing
 
         // execute program
         env.execute("Filter Using Regular Expression");
-    }
-
-
-    public static class RegexEngine {
-        private Map<String, RegexPlus> regexPlusMap;
-
-        public RegexEngine() {
-            regexPlusMap = new HashMap<>();
-        }
-
-        public void addRegex(String regexName, String regexStr) {
-            regexPlusMap.put(regexName, new RegexPlus(regexStr));
-        }
-
-        public List<Tuple3<String, String, Map<String,String>>> process(String value) {
-            List<Tuple3<String, String, Map<String,String>>> results = new ArrayList<>();
-
-            for (Map.Entry<String, RegexPlus> regexPlusEntry: regexPlusMap.entrySet()) {
-                String regexName = regexPlusEntry.getKey();
-
-                Pattern p = regexPlusEntry.getValue().getPattern();
-                Matcher m = p.matcher(value);
-
-                while (m.find()) {
-                    Map<String, String> groupMap = new HashMap<>();
-
-                    List<String> groups = regexPlusEntry.getValue().getGroups();
-                    for (String groupName: groups) {
-                        groupMap.put(groupName, m.group(groupName));
-                    }
-                    results.add(new Tuple3<>(regexName, m.group(), groupMap));
-                }
-            }
-
-            return results;
-        }
     }
 
 
