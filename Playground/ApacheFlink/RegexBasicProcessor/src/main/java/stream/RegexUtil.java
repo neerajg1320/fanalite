@@ -14,7 +14,7 @@ public class RegexUtil {
     public static List<String> getGroups(String regex) {
         List<String> namedGroups = new ArrayList<>();
 
-        Matcher m = Pattern.compile("\\(\\?<([a-zA-Z][a-zA-Z0-9]+)>").matcher(regex);
+        Matcher m = Pattern.compile("\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>").matcher(regex);
 
         while (m.find()) {
             namedGroups.add(m.group(1));
