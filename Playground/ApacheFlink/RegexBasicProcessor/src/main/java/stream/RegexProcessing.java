@@ -11,7 +11,9 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +29,6 @@ public class RegexProcessing
         DataStream<String> text = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
 
         DataStream<Tuple2<String, String>> str =  text
-                .filter(new RegexFilter())
                 .flatMap(new FlatTokenizer());
 
         str.print();
@@ -38,53 +39,49 @@ public class RegexProcessing
         env.execute("Filter Using Regular Expression");
     }
 
-    public static final class RegexFilter implements FilterFunction<String> {
-        private List<String> regexList;
-        private List<Pattern> patternList;
 
-        public RegexFilter() {
-            regexList = new ArrayList<>();
+    public static class RegexEngine {
+        private Map<String, String> regexMap;
+        private Map<String, Pattern> patternMap;
 
-            regexList.add("\\d{2}/\\d{2}/\\d{2,4}");      // date
-            regexList.add("\\d+");                      // natural numbers
+        public RegexEngine() {
+            regexMap = new HashMap<>();
 
-            patternList = new ArrayList<>();
-            for (String regex: regexList) {
-                patternList.add(Pattern.compile(regex));
+            regexMap.put("Date", "\\d{2}/\\d{2}/\\d{2,4}");      // date
+            regexMap.put("Number", "\\d+");                      // natural numbers
+
+            patternMap = new HashMap<>();
+            for (Map.Entry<String, String> regexEntry: regexMap.entrySet()) {
+                patternMap.put(regexEntry.getKey() , Pattern.compile(regexEntry.getValue()));
             }
 
         }
 
-        @Override
-        public boolean filter(String value) throws Exception {
-            boolean isMatch = false;
-            for (int index = 0; index < patternList.size(); index++) {
-                Matcher m = patternList.get(index).matcher(value);
-                int count = 0;
+        public List<Tuple2<String, String>> process(String value) {
+            List<Tuple2<String, String>> results = new ArrayList<>();
+
+            for (Map.Entry<String, Pattern> patternMapEntry: patternMap.entrySet()) {
+                Pattern p = patternMapEntry.getValue();
+                Matcher m = p.matcher(value);
                 while (m.find()) {
-                    count++;
-                }
-
-                if (count > 0) {
-                    isMatch = true;
+                    results.add(new Tuple2<>(patternMapEntry.getKey(), m.group()));
                 }
             }
 
-            return isMatch;
+            return results;
         }
     }
 
-    public static final class Tokenizer implements MapFunction<String, Tuple2<String, String>> {
-        public Tuple2<String, String> map(String value) {
-            return new Tuple2(value, "Transaction");
-        }
-    }
-
+    
     public static final class FlatTokenizer implements FlatMapFunction<String, Tuple2<String, String>> {
         @Override
         public void flatMap(String value, Collector<Tuple2<String, String>> out) {
-            out.collect(new Tuple2(value, "Date"));
-            out.collect(new Tuple2(value, "Transaction"));
+            RegexEngine regexEngine = new RegexEngine();
+            List<Tuple2<String, String>> results =  regexEngine.process(value);
+
+            for (Tuple2<String, String> entry: results) {
+                out.collect(entry);
+            }
         }
     }
 }
