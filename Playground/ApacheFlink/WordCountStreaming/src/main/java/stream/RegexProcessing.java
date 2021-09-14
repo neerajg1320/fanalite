@@ -2,11 +2,13 @@ package stream;
 
 
 import org.apache.flink.api.common.functions.FilterFunction;
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.util.Collector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class RegexProcessing
 
         DataStream<Tuple2<String, String>> str =  text
                 .filter(new RegexFilter())
-                .map(new Tokenizer());
+                .flatMap(new FlatTokenizer());
 
         str.print();
 
@@ -75,6 +77,14 @@ public class RegexProcessing
     public static final class Tokenizer implements MapFunction<String, Tuple2<String, String>> {
         public Tuple2<String, String> map(String value) {
             return new Tuple2(value, "Transaction");
+        }
+    }
+
+    public static final class FlatTokenizer implements FlatMapFunction<String, Tuple2<String, String>> {
+        @Override
+        public void flatMap(String value, Collector<Tuple2<String, String>> out) throws Exception {
+            out.collect(new Tuple2(value, "Date"));
+            out.collect(new Tuple2(value, "Transaction"));
         }
     }
 }
