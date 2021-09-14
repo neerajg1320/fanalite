@@ -1,7 +1,5 @@
-package stream;
+package stream.regex;
 
-import org.apache.flink.api.java.tuple.Tuple3;
-import stream.regex.RegexPlus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +23,9 @@ public class RegexEngine {
         regexPlusMap.remove(regexName);
     }
 
-    public List<Tuple3<String, String, Map<String,String>>> process(String value) {
-        List<Tuple3<String, String, Map<String,String>>> results = new ArrayList<>();
+
+    public List<RegexMatch> process(String value) {
+        List<RegexMatch> results = new ArrayList<>();
 
         for (Map.Entry<String, RegexPlus> regexPlusEntry: regexPlusMap.entrySet()) {
             String regexName = regexPlusEntry.getKey();
@@ -41,7 +40,7 @@ public class RegexEngine {
                 for (String groupName: groups) {
                     groupMap.put(groupName, m.group(groupName));
                 }
-                results.add(new Tuple3<>(regexName, m.group(), groupMap));
+                results.add(new RegexMatch(regexName, m.group(), groupMap));
             }
         }
 

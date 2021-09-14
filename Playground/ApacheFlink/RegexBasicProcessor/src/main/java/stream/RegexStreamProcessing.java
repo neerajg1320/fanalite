@@ -7,6 +7,8 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
+import stream.regex.RegexEngine;
+import stream.regex.RegexMatch;
 
 import java.util.List;
 import java.util.Map;
@@ -43,11 +45,11 @@ public class RegexStreamProcessing
             regexEngine.addRegex("Swipe", createSwipeRegex());
             regexEngine.addRegex("Stock", createStockRegex());
 
-            List<Tuple3<String, String, Map<String,String>>> results =  regexEngine.process(value);
-
-            for (Tuple3<String, String, Map<String,String>> entry: results) {
-                out.collect(entry);
+            List<RegexMatch> matches =  regexEngine.process(value);
+            for (RegexMatch match: matches) {
+                out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
             }
+
         }
 
         final String dateGroupName = "on";
