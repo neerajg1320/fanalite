@@ -48,6 +48,7 @@ public class RegexProcessing
     public static class RegexEngine {
         private Map<String, String> regexMap;
         private Map<String, Pattern> patternMap;
+        private Map<String, List<String>> groupsMap;
 
 
         final String dateGroupName = "on";
@@ -65,8 +66,11 @@ public class RegexProcessing
                     dateGroupName, dateRegex, numberGroupName, numberRegex));
 
             patternMap = new HashMap<>();
+            groupsMap = new HashMap<>();
             for (Map.Entry<String, String> regexEntry: regexMap.entrySet()) {
-                patternMap.put(regexEntry.getKey() , Pattern.compile(regexEntry.getValue()));
+                String regex = regexEntry.getValue();
+                patternMap.put(regexEntry.getKey(), Pattern.compile(regex));
+                groupsMap.put(regexEntry.getKey(), RegexUtil.getGroups(regex));
             }
 
         }
@@ -78,10 +82,14 @@ public class RegexProcessing
                 Pattern p = patternMapEntry.getValue();
                 Matcher m = p.matcher(value);
 
+
                 while (m.find()) {
                     Map<String, String> groupMap = new HashMap<>();
-                    groupMap.put(dateGroupName, m.group(dateGroupName));
-                    groupMap.put(numberGroupName, m.group(numberGroupName));
+
+                    List<String> groups = groupsMap.get(patternMapEntry.getKey());
+                    for (String groupName: groups) {
+                        groupMap.put(groupName, m.group(groupName));
+                    }
                     results.add(new Tuple3<>(patternMapEntry.getKey(), m.group(), groupMap));
                 }
             }
