@@ -5,6 +5,7 @@ import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -17,8 +18,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class RegexProcessing
 {
+
+
 
     public static void main(String[] args) throws Exception
     {
@@ -28,12 +32,13 @@ public class RegexProcessing
 
         DataStream<String> text = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
 
-        DataStream<Tuple2<String, String>> str =  text
+        DataStream<Tuple3<String, String, Map<String,String>>> str =  text
                 .flatMap(new FlatTokenizer());
 
         str.print();
 
         str.writeAsText(params.get("output"));
+
 
         // execute program
         env.execute("Filter Using Regular Expression");
@@ -44,11 +49,20 @@ public class RegexProcessing
         private Map<String, String> regexMap;
         private Map<String, Pattern> patternMap;
 
+
+        final String dateGroupName = "on";
+        final String dateRegex = "\\d{2}/\\d{2}/\\d{2,4}";
+        final String numberGroupName = "price";
+        final String numberRegex = "\\d+";
+
+
         public RegexEngine() {
             regexMap = new HashMap<>();
 
-            regexMap.put("Date", "\\d{2}/\\d{2}/\\d{2,4}");      // date
-            regexMap.put("Number", "\\d+");                      // natural numbers
+            // regexMap.put("Date", "\\d{2}/\\d{2}/\\d{2,4}");      // date
+            // regexMap.put("Number", "\\d+");                      // natural numbers
+            regexMap.put("Transaction", String.format("(?<%s>%s).*(?<%s>%s).*",
+                    dateGroupName, dateRegex, numberGroupName, numberRegex));
 
             patternMap = new HashMap<>();
             for (Map.Entry<String, String> regexEntry: regexMap.entrySet()) {
@@ -57,14 +71,18 @@ public class RegexProcessing
 
         }
 
-        public List<Tuple2<String, String>> process(String value) {
-            List<Tuple2<String, String>> results = new ArrayList<>();
+        public List<Tuple3<String, String, Map<String,String>>> process(String value) {
+            List<Tuple3<String, String, Map<String,String>>> results = new ArrayList<>();
 
             for (Map.Entry<String, Pattern> patternMapEntry: patternMap.entrySet()) {
                 Pattern p = patternMapEntry.getValue();
                 Matcher m = p.matcher(value);
+
                 while (m.find()) {
-                    results.add(new Tuple2<>(patternMapEntry.getKey(), m.group()));
+                    Map<String, String> groupMap = new HashMap<>();
+                    groupMap.put(dateGroupName, m.group(dateGroupName));
+                    groupMap.put(numberGroupName, m.group(numberGroupName));
+                    results.add(new Tuple3<>(patternMapEntry.getKey(), m.group(), groupMap));
                 }
             }
 
@@ -73,13 +91,13 @@ public class RegexProcessing
     }
 
 
-    public static final class FlatTokenizer implements FlatMapFunction<String, Tuple2<String, String>> {
+    public static final class FlatTokenizer implements FlatMapFunction<String, Tuple3<String, String, Map<String,String>>> {
         @Override
-        public void flatMap(String value, Collector<Tuple2<String, String>> out) {
+        public void flatMap(String value, Collector<Tuple3<String, String, Map<String,String>>> out) {
             RegexEngine regexEngine = new RegexEngine();
-            List<Tuple2<String, String>> results =  regexEngine.process(value);
+            List<Tuple3<String, String, Map<String,String>>> results =  regexEngine.process(value);
 
-            for (Tuple2<String, String> entry: results) {
+            for (Tuple3<String, String, Map<String,String>> entry: results) {
                 out.collect(entry);
             }
         }
