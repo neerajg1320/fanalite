@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fanalite</groupId>
-    <artifactId>WordCountStreaming</artifactId>
+    <artifactId>regexbasicprocessor</artifactId>
     <version>0.1</version>
 
     <dependencies>
@@ -42,11 +42,12 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>stream.WordCountStreaming</mainClass>
+                            <mainClass>stream.RegexProcessing</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

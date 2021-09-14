@@ -45,8 +45,8 @@ public class RegexProcessing
         public RegexFilter() {
             regexList = new ArrayList<>();
 
-            // regexList.add("\\d+");                      // natural numbers
             regexList.add("\\d{2}/\\d{2}/\\d{2,4}");      // date
+            regexList.add("\\d+");                      // natural numbers
 
             patternList = new ArrayList<>();
             for (String regex: regexList) {
@@ -82,7 +82,7 @@ public class RegexProcessing
 
     public static final class FlatTokenizer implements FlatMapFunction<String, Tuple2<String, String>> {
         @Override
-        public void flatMap(String value, Collector<Tuple2<String, String>> out) throws Exception {
+        public void flatMap(String value, Collector<Tuple2<String, String>> out) {
             out.collect(new Tuple2(value, "Date"));
             out.collect(new Tuple2(value, "Transaction"));
         }
