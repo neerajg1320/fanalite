@@ -42,7 +42,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>stream.WordCountStreaming</mainClass>
+                            <mainClass>stream.RegexProcessing</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

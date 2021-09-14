@@ -12,22 +12,14 @@ public class WordCountStreaming
 
     public static void main(String[] args) throws Exception
     {
-        // set up the stream execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        // Checking input parameters
         final ParameterTool params = ParameterTool.fromArgs(args);
-        // make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);
 
         DataStream<String> text = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
 
-        DataStream<Tuple2<String, Integer>> counts =  text.filter(new FilterFunction<String>()
-        {
-            public boolean filter(String value)
-            {
-                return value.startsWith("M");
-            }
-        })
+        DataStream<Tuple2<String, Integer>> counts =  text
+                .filter(new NameFilter("A"))
                 .map(new Tokenizer())         // split up the lines in pairs (2-tuples) containing: tuple2 {(name,1)...}
                 .keyBy(0).sum(1);            // group by the tuple field "0" and sum up tuple field "1"
 
@@ -39,7 +31,7 @@ public class WordCountStreaming
         env.execute("Streaming WordCount");
     }
 
-    public static final class Tokenizer  implements MapFunction<String, Tuple2<String, Integer>>
+    public static final class Tokenizer implements MapFunction<String, Tuple2<String, Integer>>
     {
         public Tuple2<String, Integer> map(String value)
         {
@@ -47,4 +39,16 @@ public class WordCountStreaming
         }
     }
 
+    public static final class NameFilter implements FilterFunction<String> {
+        private String prefix;
+
+        public NameFilter(String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public boolean filter(String value) throws Exception {
+            return value.startsWith(prefix);
+        }
+    }
 }
