@@ -72,7 +72,7 @@ public class RegexProcessing
         }
     }
 
-    
+
     public static final class FlatTokenizer implements FlatMapFunction<String, Tuple2<String, String>> {
         @Override
         public void flatMap(String value, Collector<Tuple2<String, String>> out) {
