@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RegexStreamProcessing
+public class HardcodedRegexStreamProcessing
 {
     public static void main(String[] args) throws Exception
     {
@@ -58,12 +58,12 @@ public class RegexStreamProcessing
         final String numberRegex = "\\d+";
 
         private String createSwipeRegex() {
-            return String.format("(?<%s>%s).*?(?<%s>%s).*",
+            return String.format(".*(?<%s>%s).*?(?<%s>%s).*",
                     dateGroupName, dateRegex, numberGroupName, numberRegex);
         }
 
         private String createStockRegex() {
-            return String.format("(?<%s>%s).*?(?<%s>%s).*?(?<%s>%s).*",
+            return String.format(".*(?<%s>%s).*?(?<%s>%s).*?(?<%s>%s).*",
                     dateGroupName, dateRegex, "settle", dateRegex, numberGroupName, numberRegex);
         }
     }
