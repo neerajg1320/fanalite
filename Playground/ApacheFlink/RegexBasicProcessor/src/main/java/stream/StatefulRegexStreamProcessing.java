@@ -54,7 +54,7 @@ public class StatefulRegexStreamProcessing
 
         DataStream<Tuple3<String, String, Map<String,String>>> str =  text
                 .keyBy(0)
-                .flatMap(new FlatTokenizer());
+                .flatMap(new StatefulRegexProcessor());
 
         str.print();
 
@@ -72,21 +72,41 @@ public class StatefulRegexStreamProcessing
             > {
 
         private transient ListState<String> regexListState;
-        private transient RegexEngine regexEngine = new RegexEngine();
+//        private transient RegexEngine regexEngine = new RegexEngine();
 
         @Override
         public void flatMap(Tuple4<Long, String, String, String> value,
                             Collector<Tuple3<String, String, Map<String, String>>> out) throws Exception {
+            final String selector = value.f1.trim();
+            final String name = value.f2.trim();
+            final String str = value.f3.trim();
 
-            if (value.f0.equals("Text")) {
-                List<RegexMatch> matches = regexEngine.process(value.f2);
-                for (RegexMatch match : matches) {
-                    out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
+            if (selector.equals("Text")) {
+                RegexEngine regexEngine = new RegexEngine();
+
+                int index = 0;
+                for (String regexStr: regexListState.get()) {
+                    regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
+                    out.collect(new Tuple3<>("State:" , regexStr, new HashMap<>()));
                 }
-            } else if (value.f0.equals("Rule")) {
-                out.collect(new Tuple3<>("New Rule:"+value.f1, value.f2, new HashMap<>()));
+
+//                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
+//                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
+
+                List<RegexMatch> matches = regexEngine.process(str);
+
+                if (matches.size() <= 0) {
+                    out.collect(new Tuple3<>("No Match:" + name, str, new HashMap<>()));
+                } else {
+                    for (RegexMatch match : matches) {
+                        out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
+                    }
+                }
+            } else if (selector.equals("Rule")) {
+                out.collect(new Tuple3<>("New Rule:" + name, str, new HashMap<>()));
+                regexListState.add(str);
             } else {
-                out.collect(new Tuple3<>("None", value.f0 + ":::" + value.f1, new HashMap<>()));
+                out.collect(new Tuple3<>("Not Processed", selector + ":::" + name, new HashMap<>()));
             }
         }
 
@@ -94,16 +114,16 @@ public class StatefulRegexStreamProcessing
             ListStateDescriptor<String> listDesc = new ListStateDescriptor<String>("regexStrList", String.class);
             regexListState = getRuntimeContext().getListState(listDesc);
 
-            int index = 0;
-            for (String regexStr: regexListState.get()) {
-                regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
-            }
+//            int index = 0;
+//            for (String regexStr: regexListState.get()) {
+//                regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
+//            }
 
-            if (index == 0) {
-                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
-                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
-
-            }
+//            if (index == 0) {
+//                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
+//                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
+//
+//            }
         }
     }
 
