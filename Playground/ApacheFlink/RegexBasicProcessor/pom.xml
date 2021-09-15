@@ -42,7 +42,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>stream.HardcodedRegexStreamProcessing</mainClass>
+                            <mainClass>stream.StatefulRegexStreamProcessing</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
