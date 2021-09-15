@@ -3,13 +3,19 @@ package stream;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.RichFlatMapFunction;
+import org.apache.flink.api.common.state.ListState;
+import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
+import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 import stream.regex.RegexEngine;
+import stream.regex.RegexFactory;
 import stream.regex.RegexMatch;
 
 import java.util.HashMap;
@@ -26,19 +32,28 @@ public class StatefulRegexStreamProcessing
         env.getConfig().setGlobalJobParameters(params);
 
         DataStream<String> input = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
-        DataStream<Tuple3<String, String, String>> text = input.map(new MapFunction<String, Tuple3<String, String, String>>() {
+        DataStream<Tuple4<Long, String, String, String>> text = input.map(new MapFunction<String, Tuple4<Long, String, String, String>>() {
+            final int numParams = 4;
             @Override
-            public Tuple3<String, String, String> map(String value) throws Exception {
+            public Tuple4<Long, String, String, String> map(String value) throws Exception {
                 // Split only on first occurrence of comma
-                String[] parts = value.split(",", 3);
-                if (parts.length < 3) {
-                    return new Tuple3<>("Error", "Minimum three elements required", "");
+                String[] parts = value.split(",", numParams);
+                if (parts.length < numParams) {
+                    return new Tuple4<>(-1L, String.format("Minimum %d elements required", numParams), "", "");
                 }
-                return new Tuple3<>(parts[0], parts[1], parts[2]);
+
+                Long userId = -1L;
+                try {
+                    userId = Long.parseLong(parts[0]);
+                } catch (Exception e) {
+                    // Check how to print log messages
+                }
+                return new Tuple4<>(userId, parts[1], parts[2], parts[3]);
             }
         });
 
         DataStream<Tuple3<String, String, Map<String,String>>> str =  text
+                .keyBy(0)
                 .flatMap(new FlatTokenizer());
 
         str.print();
@@ -51,36 +66,19 @@ public class StatefulRegexStreamProcessing
     }
 
 
-    public static final class FlatTokenizer implements FlatMapFunction<
-            Tuple3<String, String, String>,
+    public static class StatefulRegexProcessor extends RichFlatMapFunction<
+            Tuple4<Long, String, String, String>,
             Tuple3<String, String, Map<String,String>>
-                    > {
+            > {
 
-        final String dateGroupName = "on";
-        final String dateRegex = "\\d{2}/\\d{2}/\\d{2,4}";
-        final String numberGroupName = "price";
-        final String numberRegex = "\\d+";
-
-        private String createSwipeRegex() {
-            return String.format(".*(?<%s>%s).*?(?<%s>%s).*",
-                    dateGroupName, dateRegex, numberGroupName, numberRegex);
-        }
-
-        private String createStockRegex() {
-            return String.format(".*(?<%s>%s).*?(?<%s>%s).*?(?<%s>%s).*",
-                    dateGroupName, dateRegex, "settle", dateRegex, numberGroupName, numberRegex);
-        }
+        private transient ListState<String> regexListState;
+        private transient RegexEngine regexEngine = new RegexEngine();
 
         @Override
-        public void flatMap(Tuple3<String, String, String> value,
-                            Collector<Tuple3<String, String, Map<String, String>>> out) {
+        public void flatMap(Tuple4<Long, String, String, String> value,
+                            Collector<Tuple3<String, String, Map<String, String>>> out) throws Exception {
 
             if (value.f0.equals("Text")) {
-                RegexEngine regexEngine = new RegexEngine();
-
-                regexEngine.addRegex("Swipe", createSwipeRegex());
-                regexEngine.addRegex("Stock", createStockRegex());
-
                 List<RegexMatch> matches = regexEngine.process(value.f2);
                 for (RegexMatch match : matches) {
                     out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
@@ -89,6 +87,53 @@ public class StatefulRegexStreamProcessing
                 out.collect(new Tuple3<>("New Rule:"+value.f1, value.f2, new HashMap<>()));
             } else {
                 out.collect(new Tuple3<>("None", value.f0 + ":::" + value.f1, new HashMap<>()));
+            }
+        }
+
+        public void open(Configuration con) throws Exception {
+            ListStateDescriptor<String> listDesc = new ListStateDescriptor<String>("regexStrList", String.class);
+            regexListState = getRuntimeContext().getListState(listDesc);
+
+            int index = 0;
+            for (String regexStr: regexListState.get()) {
+                regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
+            }
+
+            if (index == 0) {
+                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
+                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
+
+            }
+        }
+    }
+
+    public static final class FlatTokenizer implements FlatMapFunction<
+            Tuple4<Long, String, String, String>,
+            Tuple3<String, String, Map<String,String>>
+                    > {
+
+        @Override
+        public void flatMap(Tuple4<Long, String, String, String> value,
+                            Collector<Tuple3<String, String, Map<String, String>>> out) {
+
+            final String selector = value.f1.trim();
+            final String name = value.f2.trim();
+            final String str = value.f3.trim();
+
+            if (selector.equals("Text")) {
+                RegexEngine regexEngine = new RegexEngine();
+
+                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
+                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
+
+                List<RegexMatch> matches = regexEngine.process(str);
+                for (RegexMatch match : matches) {
+                    out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
+                }
+            } else if (selector.equals("Rule")) {
+                out.collect(new Tuple3<>("New Rule:" + name, str, new HashMap<>()));
+            } else {
+                out.collect(new Tuple3<>("None", selector + ":::" + name, new HashMap<>()));
             }
         }
 

@@ -8,6 +8,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 import stream.regex.RegexEngine;
+import stream.regex.RegexFactory;
 import stream.regex.RegexMatch;
 
 import java.util.List;
@@ -42,8 +43,8 @@ public class HardcodedRegexStreamProcessing
         public void flatMap(String value, Collector<Tuple3<String, String, Map<String,String>>> out) {
             RegexEngine regexEngine = new RegexEngine();
 
-            regexEngine.addRegex("Swipe", createSwipeRegex());
-            regexEngine.addRegex("Stock", createStockRegex());
+            regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
+            regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
 
             List<RegexMatch> matches =  regexEngine.process(value);
             for (RegexMatch match: matches) {
@@ -52,19 +53,5 @@ public class HardcodedRegexStreamProcessing
 
         }
 
-        final String dateGroupName = "on";
-        final String dateRegex = "\\d{2}/\\d{2}/\\d{2,4}";
-        final String numberGroupName = "price";
-        final String numberRegex = "\\d+";
-
-        private String createSwipeRegex() {
-            return String.format(".*(?<%s>%s).*?(?<%s>%s).*",
-                    dateGroupName, dateRegex, numberGroupName, numberRegex);
-        }
-
-        private String createStockRegex() {
-            return String.format(".*(?<%s>%s).*?(?<%s>%s).*?(?<%s>%s).*",
-                    dateGroupName, dateRegex, "settle", dateRegex, numberGroupName, numberRegex);
-        }
     }
 }
