@@ -26,12 +26,15 @@ public class StatefulRegexStreamProcessing
         env.getConfig().setGlobalJobParameters(params);
 
         DataStream<String> input = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
-        DataStream<Tuple2<String, String>> text = input.map(new MapFunction<String, Tuple2<String, String>>() {
+        DataStream<Tuple3<String, String, String>> text = input.map(new MapFunction<String, Tuple3<String, String, String>>() {
             @Override
-            public Tuple2<String, String> map(String value) throws Exception {
+            public Tuple3<String, String, String> map(String value) throws Exception {
                 // Split only on first occurrence of comma
-                String[] parts = value.split(",", 2);
-                return new Tuple2<>(parts[0], parts[1]);
+                String[] parts = value.split(",", 3);
+                if (parts.length < 3) {
+                    return new Tuple3<>("Error", "Minimum three elements required", "");
+                }
+                return new Tuple3<>(parts[0], parts[1], parts[2]);
             }
         });
 
@@ -49,7 +52,7 @@ public class StatefulRegexStreamProcessing
 
 
     public static final class FlatTokenizer implements FlatMapFunction<
-            Tuple2<String, String>,
+            Tuple3<String, String, String>,
             Tuple3<String, String, Map<String,String>>
                     > {
 
@@ -69,7 +72,7 @@ public class StatefulRegexStreamProcessing
         }
 
         @Override
-        public void flatMap(Tuple2<String, String> value,
+        public void flatMap(Tuple3<String, String, String> value,
                             Collector<Tuple3<String, String, Map<String, String>>> out) {
 
             if (value.f0.equals("Text")) {
@@ -78,12 +81,12 @@ public class StatefulRegexStreamProcessing
                 regexEngine.addRegex("Swipe", createSwipeRegex());
                 regexEngine.addRegex("Stock", createStockRegex());
 
-                List<RegexMatch> matches = regexEngine.process(value.f1);
+                List<RegexMatch> matches = regexEngine.process(value.f2);
                 for (RegexMatch match : matches) {
                     out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
                 }
             } else if (value.f0.equals("Rule")) {
-                out.collect(new Tuple3<>("New Rule", value.f1, new HashMap<>()));
+                out.collect(new Tuple3<>("New Rule:"+value.f1, value.f2, new HashMap<>()));
             } else {
                 out.collect(new Tuple3<>("None", value.f0 + ":::" + value.f1, new HashMap<>()));
             }
