@@ -1,12 +1,10 @@
 package stream;
 
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -15,13 +13,11 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 import stream.regex.RegexEngine;
-import stream.regex.RegexFactory;
 import stream.regex.RegexMatch;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class StatefulRegexStreamProcessing
 {
@@ -90,9 +86,6 @@ public class StatefulRegexStreamProcessing
                     out.collect(new Tuple3<>("State:" , regexStr, new HashMap<>()));
                 }
 
-//                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
-//                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
-
                 List<RegexMatch> matches = regexEngine.process(str);
 
                 if (matches.size() <= 0) {
@@ -113,49 +106,6 @@ public class StatefulRegexStreamProcessing
         public void open(Configuration con) throws Exception {
             ListStateDescriptor<String> listDesc = new ListStateDescriptor<String>("regexStrList", String.class);
             regexListState = getRuntimeContext().getListState(listDesc);
-
-//            int index = 0;
-//            for (String regexStr: regexListState.get()) {
-//                regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
-//            }
-
-//            if (index == 0) {
-//                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
-//                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
-//
-//            }
         }
-    }
-
-    public static final class FlatTokenizer implements FlatMapFunction<
-            Tuple4<Long, String, String, String>,
-            Tuple3<String, String, Map<String,String>>
-                    > {
-
-        @Override
-        public void flatMap(Tuple4<Long, String, String, String> value,
-                            Collector<Tuple3<String, String, Map<String, String>>> out) {
-
-            final String selector = value.f1.trim();
-            final String name = value.f2.trim();
-            final String str = value.f3.trim();
-
-            if (selector.equals("Text")) {
-                RegexEngine regexEngine = new RegexEngine();
-
-                regexEngine.addRegex("Swipe", RegexFactory.createSwipeRegex());
-                regexEngine.addRegex("Stock", RegexFactory.createStockRegex());
-
-                List<RegexMatch> matches = regexEngine.process(str);
-                for (RegexMatch match : matches) {
-                    out.collect(new Tuple3<>(match.getRegexName(), match.getFullMatch(), match.getGroupMap()));
-                }
-            } else if (selector.equals("Rule")) {
-                out.collect(new Tuple3<>("New Rule:" + name, str, new HashMap<>()));
-            } else {
-                out.collect(new Tuple3<>("None", selector + ":::" + name, new HashMap<>()));
-            }
-        }
-
     }
 }
