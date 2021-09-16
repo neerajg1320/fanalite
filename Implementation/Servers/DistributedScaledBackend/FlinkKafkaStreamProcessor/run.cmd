@@ -13,12 +13,10 @@ bin/kafka-server-start.sh config/server.properties
 ## Start Application
 
 # Terminal 1:
-cd ~/Projects/Kafka/kafka_2.13-2.8.0
-bin/kafka-console-producer.sh --topic text  --bootstrap-server localhost:9092
+~/Projects/Kafka/kafka_2.13-2.8.0/bin/kafka-console-producer.sh --topic text  --bootstrap-server localhost:9092
 
 # Terminal 2:
-cd ~/Projects/Kafka/kafka_2.13-2.8.0
-bin/kafka-console-consumer.sh --topic transactions  --from-beginning --bootstrap-server localhost:9092
+~/Projects/Kafka/kafka_2.13-2.8.0/bin/kafka-console-consumer.sh --topic transactions  --from-beginning --bootstrap-server localhost:9092
 
 # Terminal 3:
 cd /home/neeraj/mac_project/fanalite/Implementation/Servers/DistributedScaledBackend/FlinkKafkaStreamProcessor
