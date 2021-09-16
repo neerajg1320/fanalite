@@ -57,7 +57,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>stream.KafkaStreamProcessing</mainClass>
+                            <mainClass>stream.SchemaProcessing</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

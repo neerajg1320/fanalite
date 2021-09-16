@@ -5,22 +5,24 @@ import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
-import stream.models.InputMessage;
 
 import java.io.IOException;
 
-public class InputMessageSchema implements DeserializationSchema<InputMessage>, SerializationSchema<InputMessage> {
+public class PojoSchema<T> implements SerializationSchema<T>, DeserializationSchema<T> {
+
     ObjectMapper objectMapper;
+    Class<T> klass;
+
+    public PojoSchema(Class<T> klass) {
+        this.klass = klass;
+        objectMapper = new ObjectMapper();
+    }
 
     @Override
-    public byte[] serialize(InputMessage inputMessage) {
-        if (objectMapper == null) {
-            objectMapper = new ObjectMapper();
-        }
-
-        String error = "";
+    public byte[] serialize(T pojo) {
+        String error;
         try {
-            return objectMapper.writeValueAsBytes(inputMessage);
+            return objectMapper.writeValueAsBytes(pojo);
         } catch (JsonProcessingException e) {
             error = e.getMessage();
         }
@@ -28,23 +30,24 @@ public class InputMessageSchema implements DeserializationSchema<InputMessage>, 
         return error.getBytes();
     }
 
-
     @Override
-    public InputMessage deserialize(byte[] bytes) throws IOException {
+    public T deserialize(byte[] bytes) throws IOException {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
         }
 
-        return objectMapper.readValue(bytes, InputMessage.class);
+        return objectMapper.readValue(bytes, klass);
     }
 
     @Override
-    public boolean isEndOfStream(InputMessage inputMessage) {
+    public boolean isEndOfStream(T t) {
         return false;
     }
 
+
+
     @Override
-    public TypeInformation<InputMessage> getProducedType() {
-        return TypeInformation.of(InputMessage.class);
+    public TypeInformation<T> getProducedType() {
+        return TypeInformation.of(klass);
     }
 }

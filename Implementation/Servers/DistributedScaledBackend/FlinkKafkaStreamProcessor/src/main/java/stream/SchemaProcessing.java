@@ -14,7 +14,9 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
-import stream.kafkaHelpers.KafkaStreamHelper;
+import stream.kafkaHelpers.KafkaInputMessageStreamHelper;
+import stream.kafkaHelpers.KafkaStringStreamHelper;
+import stream.models.InputMessage;
 import stream.regex.RegexEngine;
 import stream.regex.RegexMatch;
 
@@ -47,44 +49,13 @@ public class SchemaProcessing
         }
 
 
-        FlinkKafkaConsumer011<String> kafkaConsumer = KafkaStreamHelper.createStringConsumerForTopic(
+        FlinkKafkaConsumer011<InputMessage> kafkaConsumer = KafkaInputMessageStreamHelper.createStringConsumerForTopic(
                 kafkaInputTopic, kafkaAddress, kafkaInputGroup);
 
 
-        DataStream<String> inputStrStream = env.addSource(kafkaConsumer);
-        DataStream<Tuple4<Long, String, String, String>> inputTupleStream = inputStrStream.map(new MapFunction<String, Tuple4<Long, String, String, String>>() {
-            final int numParams = 4;
-            @Override
-            public Tuple4<Long, String, String, String> map(String value) throws Exception {
-                // Split only on first occurrence of comma
-                String[] parts = value.split(",", numParams);
-                if (parts.length < numParams) {
-                    return new Tuple4<>(-1L, String.format("Minimum %d elements required", numParams), "", "");
-                }
-
-                Long userId = -1L;
-                try {
-                    userId = Long.parseLong(parts[0]);
-                } catch (Exception e) {
-                    // Check how to print log messages
-                }
-                return new Tuple4<>(userId, parts[1], parts[2], parts[3]);
-            }
-        });
-
-        DataStream<Tuple3<String, String, Map<String,String>>> matchesStream =  inputTupleStream
-                .keyBy(0)
-                .flatMap(new StatefulRegexProcessor());
-
-
-        matchesStream
-                .map(new MapFunction<Tuple3<String, String, Map<String, String>>, String>() {
-                      @Override
-                      public String map(Tuple3<String, String, Map<String, String>> value) {
-                          return value.f0 + ", " + value.f1 + ", " + value.f2;
-                      }
-                  }
-                ).addSink(KafkaStreamHelper.createStringProducerforTopic(kafkaOutputTopic, kafkaAddress));
+        env
+                .addSource(kafkaConsumer)
+                .addSink(KafkaInputMessageStreamHelper.createStringProducerforTopic(kafkaOutputTopic, kafkaAddress));
 
         // execute program
         env.execute("Filter Using Regular Expression");

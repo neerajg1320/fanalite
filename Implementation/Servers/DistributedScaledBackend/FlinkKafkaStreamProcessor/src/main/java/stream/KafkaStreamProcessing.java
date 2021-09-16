@@ -14,7 +14,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.util.Collector;
-import stream.kafkaHelpers.KafkaStreamHelper;
+import stream.kafkaHelpers.KafkaStringStreamHelper;
 import stream.regex.RegexEngine;
 import stream.regex.RegexMatch;
 
@@ -47,7 +47,7 @@ public class KafkaStreamProcessing
         }
 
 
-        FlinkKafkaConsumer011<String> kafkaConsumer = KafkaStreamHelper.createStringConsumerForTopic(
+        FlinkKafkaConsumer011<String> kafkaConsumer = KafkaStringStreamHelper.createStringConsumerForTopic(
                 kafkaInputTopic, kafkaAddress, kafkaInputGroup);
 
 
@@ -84,7 +84,7 @@ public class KafkaStreamProcessing
                           return value.f0 + ", " + value.f1 + ", " + value.f2;
                       }
                   }
-                ).addSink(KafkaStreamHelper.createStringProducerforTopic(kafkaOutputTopic, kafkaAddress));
+                ).addSink(KafkaStringStreamHelper.createStringProducerforTopic(kafkaOutputTopic, kafkaAddress));
 
         // execute program
         env.execute("Filter Using Regular Expression");
