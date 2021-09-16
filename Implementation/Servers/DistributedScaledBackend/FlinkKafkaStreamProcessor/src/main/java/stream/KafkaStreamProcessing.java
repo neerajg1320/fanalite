@@ -6,6 +6,9 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -96,8 +99,8 @@ public class KafkaStreamProcessing
             Tuple3<String, String, Map<String,String>>
             > {
 
-        private transient ListState<String> regexListState;
-//        private transient RegexEngine regexEngine = new RegexEngine();
+        private transient ListState<Tuple2<String, String>> regexListState;
+        private transient RegexEngine regexEngine;
 
         @Override
         public void flatMap(Tuple4<Long, String, String, String> value,
@@ -106,17 +109,13 @@ public class KafkaStreamProcessing
             final String name = value.f2.trim();
             final String str = value.f3.trim();
 
+            if (regexEngine == null) {
+                out.collect(new Tuple3<>("RegexEngine:", "Initializing", new HashMap<>()));
+                initRegexEngine(out);
+            }
+
             if (selector.equals("Text")) {
-                RegexEngine regexEngine = new RegexEngine();
-
-                int index = 0;
-                for (String regexStr: regexListState.get()) {
-                    regexEngine.addRegex(String.format("Regex%d", index++), regexStr);
-                    out.collect(new Tuple3<>("State:" , regexStr, new HashMap<>()));
-                }
-
                 List<RegexMatch> matches = regexEngine.process(str);
-
                 if (matches.size() <= 0) {
                     out.collect(new Tuple3<>("No Match:" + name, str, new HashMap<>()));
                 } else {
@@ -126,14 +125,30 @@ public class KafkaStreamProcessing
                 }
             } else if (selector.equals("Rule")) {
                 out.collect(new Tuple3<>("New Rule:" + name, str, new HashMap<>()));
-                regexListState.add(str);
+                regexListState.add(new Tuple2<>(name, str));
+                regexEngine.addRegex(name, str);
             } else {
                 out.collect(new Tuple3<>("Not Processed", selector + ":::" + name, new HashMap<>()));
             }
         }
 
-        public void open(Configuration con) throws Exception {
-            ListStateDescriptor<String> listDesc = new ListStateDescriptor<String>("regexStrList", String.class);
+        private void initRegexEngine(Collector<Tuple3<String, String, Map<String, String>>> out) throws Exception {
+            regexEngine = new RegexEngine();
+            
+            // regexListState.get() has to be called from keyed Context, hence it cannot be called in open()
+            for (Tuple2<String, String> regexTuple : regexListState.get()) {
+                regexEngine.addRegex(regexTuple.f0, regexTuple.f1);
+                if (out != null) {
+                    out.collect(new Tuple3<>("FromState:", regexTuple.f1, new HashMap<>()));
+                }
+            }
+        }
+
+        public void open(Configuration conf) throws Exception {
+            ListStateDescriptor<Tuple2<String,String>> listDesc = new ListStateDescriptor<>(
+                    "regexStrList",
+                    TypeInformation.of(new TypeHint<Tuple2<String, String>>() {})
+            );
             regexListState = getRuntimeContext().getListState(listDesc);
         }
     }
