@@ -6,6 +6,8 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -21,6 +23,7 @@ import stream.kafkaHelpers.KafkaStringStreamHelper;
 import stream.regex.RegexEngine;
 import stream.regex.RegexMatch;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +102,7 @@ public class KafkaStreamProcessing
             Tuple3<String, String, Map<String,String>>
             > {
 
+        private transient ValueState<Integer> callCountState;
         private transient ListState<Tuple2<String, String>> regexListState;
         private transient RegexEngine regexEngine;
 
@@ -108,6 +112,11 @@ public class KafkaStreamProcessing
             final String selector = value.f1.trim();
             final String name = value.f2.trim();
             final String str = value.f3.trim();
+
+            // Increment the callCount
+            callCountState.update(callCountState.value() + 1);
+
+            // simulateCrashOnThreshold();
 
             if (regexEngine == null) {
                 out.collect(new Tuple3<>("RegexEngine:", "Initializing", new HashMap<>()));
@@ -132,23 +141,31 @@ public class KafkaStreamProcessing
             }
         }
 
+        private void simulateCrashOnThreshold() throws IOException {
+            final int crashThreshold = 5;
+            if (callCountState.value() >= crashThreshold) {
+                regexEngine = null;
+                callCountState.clear();
+            }
+        }
+
         private void initRegexEngine(Collector<Tuple3<String, String, Map<String, String>>> out) throws Exception {
             regexEngine = new RegexEngine();
-            
+
             // regexListState.get() has to be called from keyed Context, hence it cannot be called in open()
             for (Tuple2<String, String> regexTuple : regexListState.get()) {
                 regexEngine.addRegex(regexTuple.f0, regexTuple.f1);
-                if (out != null) {
-                    out.collect(new Tuple3<>("FromState:", regexTuple.f1, new HashMap<>()));
-                }
+                out.collect(new Tuple3<>("FromState:", regexTuple.f0 + ":" + regexTuple.f1, new HashMap<>()));
             }
         }
 
         public void open(Configuration conf) throws Exception {
+            ValueStateDescriptor<Integer> valueDesc = new ValueStateDescriptor<>("callCount", Integer.class, 0);
             ListStateDescriptor<Tuple2<String,String>> listDesc = new ListStateDescriptor<>(
                     "regexStrList",
                     TypeInformation.of(new TypeHint<Tuple2<String, String>>() {})
             );
+            callCountState = getRuntimeContext().getState(valueDesc);
             regexListState = getRuntimeContext().getListState(listDesc);
         }
     }
