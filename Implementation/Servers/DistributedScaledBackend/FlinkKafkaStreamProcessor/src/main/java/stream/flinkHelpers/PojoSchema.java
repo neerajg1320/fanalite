@@ -3,6 +3,7 @@ package stream.flinkHelpers;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonParseException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,12 +32,16 @@ public class PojoSchema<T> implements SerializationSchema<T>, DeserializationSch
     }
 
     @Override
-    public T deserialize(byte[] bytes) throws IOException {
+    public T deserialize(byte[] bytes) {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
         }
 
-        return objectMapper.readValue(bytes, klass);
+        try {
+            return objectMapper.readValue(bytes, klass);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
