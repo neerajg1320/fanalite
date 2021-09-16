@@ -1,9 +1,9 @@
 package stream;
 
 
+
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.java.tuple.Tuple3;
@@ -13,15 +13,14 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
 import org.apache.flink.util.Collector;
+import stream.kafkaHelpers.KafkaStreamHelper;
 import stream.regex.RegexEngine;
 import stream.regex.RegexMatch;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 
 public class KafkaStreamProcessing
@@ -32,12 +31,28 @@ public class KafkaStreamProcessing
         final ParameterTool params = ParameterTool.fromArgs(args);
         env.getConfig().setGlobalJobParameters(params);
 
-        FlinkKafkaConsumer011<String> kafkaConsumer = createStringConsumerForTopic(
-                "rules-transactions", "localhost:9092", "flink");
-        // DataStream<String> input = env.socketTextStream("localhost", Integer.parseInt(params.get("port")));
+        String kafkaAddress = params.get("kafka-address");
+        String kafkaInputTopic = params.get("input-topic");
+        String kafkaInputGroup = params.get("input-group");
+        String kafkaOutputTopic = params.get("output-topic");
 
-        DataStream<String> input = env.addSource(kafkaConsumer);
-        DataStream<Tuple4<Long, String, String, String>> text = input.map(new MapFunction<String, Tuple4<Long, String, String, String>>() {
+        if (kafkaAddress == null || kafkaAddress.equals("")) {
+            kafkaAddress = "localhost:9092";
+        }
+        if (kafkaInputTopic == null || kafkaInputTopic.equals("")) {
+            kafkaInputTopic = "fanalite-input";
+        }
+        if (kafkaOutputTopic == null || kafkaOutputTopic.equals("")) {
+            kafkaOutputTopic = "fanalite-output";
+        }
+
+
+        FlinkKafkaConsumer011<String> kafkaConsumer = KafkaStreamHelper.createStringConsumerForTopic(
+                kafkaInputTopic, kafkaAddress, kafkaInputGroup);
+
+
+        DataStream<String> inputStrStream = env.addSource(kafkaConsumer);
+        DataStream<Tuple4<Long, String, String, String>> inputTupleStream = inputStrStream.map(new MapFunction<String, Tuple4<Long, String, String, String>>() {
             final int numParams = 4;
             @Override
             public Tuple4<Long, String, String, String> map(String value) throws Exception {
@@ -57,34 +72,25 @@ public class KafkaStreamProcessing
             }
         });
 
-        DataStream<Tuple3<String, String, Map<String,String>>> str =  text
+        DataStream<Tuple3<String, String, Map<String,String>>> matchesStream =  inputTupleStream
                 .keyBy(0)
                 .flatMap(new StatefulRegexProcessor());
 
-        str.print();
+//        matchesStream.print();
 
-        str.writeAsText(params.get("output"));
+//        matchesStream.writeAsText(params.get("output"));
 
+        matchesStream
+                .map(new MapFunction<Tuple3<String, String, Map<String, String>>, String>() {
+                      @Override
+                      public String map(Tuple3<String, String, Map<String, String>> value) {
+                          return value.f0 + ", " + value.f1 + ", " + value.f2;
+                      }
+                  }
+                ).addSink(KafkaStreamHelper.createStringProducerforTopic(kafkaOutputTopic, kafkaAddress));
 
         // execute program
         env.execute("Filter Using Regular Expression");
-    }
-
-    public static FlinkKafkaConsumer011<String> createStringConsumerForTopic(
-            String topic, String kafkaAddress, String kafkaGroup
-
-    ) {
-
-        Properties props = new Properties();
-        props.setProperty("bootstrap.servers", kafkaAddress);
-        props.setProperty("group.id", kafkaGroup);
-        return new FlinkKafkaConsumer011<String>(topic, new SimpleStringSchema(), props);
-
-    }
-
-    public static FlinkKafkaProducer011<String> createStringProducerforTopic(
-            String topic, String kafkaAddress) {
-        return new FlinkKafkaProducer011<String>(kafkaAddress, topic, new SimpleStringSchema());
     }
 
 
