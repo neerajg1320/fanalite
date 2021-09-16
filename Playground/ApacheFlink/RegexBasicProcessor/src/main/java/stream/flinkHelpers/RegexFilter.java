@@ -1,4 +1,4 @@
-package stream.helpers;
+package stream.flinkHelpers;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 
