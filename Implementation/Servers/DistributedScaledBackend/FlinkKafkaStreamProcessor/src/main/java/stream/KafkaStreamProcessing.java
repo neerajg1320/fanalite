@@ -76,9 +76,6 @@ public class KafkaStreamProcessing
                 .keyBy(0)
                 .flatMap(new StatefulRegexProcessor());
 
-//        matchesStream.print();
-
-//        matchesStream.writeAsText(params.get("output"));
 
         matchesStream
                 .map(new MapFunction<Tuple3<String, String, Map<String, String>>, String>() {
