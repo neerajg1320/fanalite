@@ -1,9 +1,11 @@
 package stream.kafkaHelpers;
 
 
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
+import stream.flinkHelpers.InputMessageSchema;
 
 import java.util.Properties;
 
