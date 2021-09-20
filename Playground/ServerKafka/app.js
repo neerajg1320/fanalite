@@ -1,8 +1,11 @@
 const { Kafka } = require("kafkajs");
 
-run().then(() => console.log("Done"), err => console.log(err));
+subscribe().then(() => console.log("Done"), err => console.log(err));
 
-async function run() {
+produce().then(() => console.log("Done"), err => console.log(err));
+
+
+async function subscribe() {
     const kafka = new Kafka({brokers: ["ubuntu-18:9092"]});
 
     const consumer = kafka.consumer({groupId: "" + Date.now()});
@@ -15,4 +18,18 @@ async function run() {
             console.log(data.message.value.toString("utf-8"));
         }
     })
+}
+
+async function produce() {
+    const kafka = new Kafka({brokers: ["ubuntu-18:9092"]});
+
+    const producer = kafka.producer();
+    await producer.connect();
+
+    await producer.send({
+        topic: "text",
+        messages: [
+            {value: "event from node application"}
+        ]
+    });
 }
