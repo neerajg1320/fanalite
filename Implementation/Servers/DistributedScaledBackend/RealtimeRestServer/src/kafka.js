@@ -10,7 +10,7 @@ module.exports = async function (app) {
   await kafkaConsumer.run({
     eachMessage: async (data) => {
       // console.log(data);
-      console.log(data.message.value.toString("utf-8"));
+      // console.log("src/kafka.js", data.message.value.toString("utf-8"));
     }
   })
 
@@ -20,10 +20,14 @@ module.exports = async function (app) {
   await kafkaProducer.send({
     topic: "text",
     messages: [
-      {value: "event from node application"}
+      {
+        value: "The node kafka producer is active"
+      }
     ]
   });
 
   app.set('kafkaProducer', kafkaProducer);
-  console.log("'app.set(kafkaQueues)' called");
+  app.set('kafkaConsumer', kafkaConsumer);
+
+  console.log("Configured kafkaConsumer and kafkaProducer in app");
 };
