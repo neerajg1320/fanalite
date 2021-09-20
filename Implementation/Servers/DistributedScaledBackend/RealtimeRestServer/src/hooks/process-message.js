@@ -12,6 +12,7 @@ module.exports = (options = {}) => {
 
     // The logged in user
     const { user } = context.params;
+    console.log(`[hook:process-message]: user=${user}`)
 
     // The actual message text
     // Make sure that messages are no longer than 400 characters

@@ -40,7 +40,7 @@
   "kafka": {
     "brokers":["ubuntu-18:9092"],
     "producer": {
-      "activationMessage": true
+      "sendActivationMessage": false
     },
     "consumer": {
       "groupName": "NodeApplication"
