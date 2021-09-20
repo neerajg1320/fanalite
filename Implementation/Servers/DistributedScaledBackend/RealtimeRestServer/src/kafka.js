@@ -4,7 +4,7 @@ module.exports = async function (app) {
   const kafkaConfig = app.get('kafka');
 
   const kafkaClient = new Kafka(kafkaConfig);
-  const kafkaConsumer = kafkaClient.consumer({groupId: "" + Date.now()});
+  const kafkaConsumer = kafkaClient.consumer({groupId: kafkaConfig.consumer.groupName});
 
   await kafkaConsumer.subscribe(({topic: "text", fromBeginning: false}));
   await kafkaConsumer.run({
