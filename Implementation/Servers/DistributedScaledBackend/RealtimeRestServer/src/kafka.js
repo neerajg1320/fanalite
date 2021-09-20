@@ -10,6 +10,15 @@ module.exports = async function (app) {
   await kafkaConsumer.run({
     eachMessage: async (data) => {
       console.log("src/kafka.js", data.message.value.toString("utf-8"));
+
+      const messageService = app.service('messages');
+      const params = {user: {_id: "4BTU9gmA9AwM0720"}};
+
+      messageService.emit('custom', params);
+      console.log('Custom event emitted');
+
+      // Right now this is not working so we will have to find another way to push transcations to front-endnd
+      // messageService.create({data, params});
     }
   });
 

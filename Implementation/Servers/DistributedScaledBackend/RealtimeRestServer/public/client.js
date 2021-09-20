@@ -107,6 +107,8 @@ const addUser = user => {
 
 // Renders a message to the page
 const addMessage = message => {
+  console.log('addMessage: message=', message);
+
   // The user that sent this message (added by the populate-user hook)
   const { user = {} } = message;
   const chat = document.querySelector('.chat');
@@ -242,6 +244,14 @@ addEventListener('#send-message', 'submit', async ev => {
 
   input.value = '';
 });
+
+// Handles a custom event on message service
+const customHandler = message => {
+  console.log('customHandler: message=', message);
+};
+
+// Listen to created events and add the new message in real-time
+client.service('messages').on('custom', customHandler);
 
 // Listen to created events and add the new message in real-time
 client.service('messages').on('created', addMessage);

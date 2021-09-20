@@ -6,6 +6,7 @@ const hooks = require('./messages.hooks');
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
+    events: ['custom'],
     paginate: app.get('paginate')
   };
 

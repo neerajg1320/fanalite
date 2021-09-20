@@ -4,8 +4,11 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
+
     // Get `app`, `method`, `params` and `result` from the hook context
     const { app, method, result, params } = context;
+
+    // console.log("[hooks:populate-user]: params=", params)
 
     // Function that adds the user to a single message object
     const addUser = async message => {

@@ -10,9 +10,11 @@ module.exports = (options = {}) => {
       throw new Error('A message must have text field');
     }
 
+    // console.log(`[hook:process-message]: data=`, data);
+
     // The logged in user
     const { user } = context.params;
-    console.log(`[hook:process-message]: user=${user}`)
+    // console.log(`[hook:process-message]: user=`, user);
 
     // The actual message text
     // Make sure that messages are no longer than 400 characters
@@ -26,6 +28,7 @@ module.exports = (options = {}) => {
       // Add the current date
       createdAt: new Date().getTime()
     };
+
     return context;
   };
 };
