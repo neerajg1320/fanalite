@@ -4,6 +4,8 @@ const processMessage = require('../../hooks/process-message');
 
 const populateUser = require('../../hooks/populate-user');
 
+const forwardMessageKafka = require('../../hooks/forward-message-kafka');
+
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],
@@ -19,10 +21,10 @@ module.exports = {
     all: [populateUser()],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [forwardMessageKafka()],
+    update: [forwardMessageKafka()],
+    patch: [forwardMessageKafka()],
+    remove: [forwardMessageKafka()]
   },
 
   error: {
