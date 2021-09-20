@@ -1,9 +1,9 @@
 const Kafka = require('kafkajs').Kafka;
 
 module.exports = async function (app) {
-  const kafkaBroker = app.get('kafkaBroker');
+  const kafkaConfig = app.get('kafka');
 
-  const kafkaClient = new Kafka({brokers: [kafkaBroker]});
+  const kafkaClient = new Kafka(kafkaConfig);
   const kafkaConsumer = kafkaClient.consumer({groupId: "" + Date.now()});
 
   await kafkaConsumer.subscribe(({topic: "text", fromBeginning: false}));

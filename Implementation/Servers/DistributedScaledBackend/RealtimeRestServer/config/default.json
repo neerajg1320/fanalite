@@ -37,5 +37,7 @@
   },
   "nedb": "../data",
   "mongodb": "mongodb+srv://neeraj:Feathers@cluster0.95lt1.mongodb.net/myFirstDatabase",
-  "kafkaBroker": "ubuntu-18:9092"
+  "kafka": {
+    "brokers":["ubuntu-18:9092"]
+  }
 }
