@@ -5,14 +5,31 @@ import {Card, Logo, Form, Input, Button, Error} from './AuthForm';
 
 import {firebaseAuth} from '../../firebaseConfig';
 import axios from "axios";
+
 import config from "../config/default";
 
 function SignupForm() {
-    const [isRegesitered, setRegistered] = useState(false);
+    const [isRegistered, setRegistered] = useState(false);
     const [isError, setIsError] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    function serverSignup() {
+        if (config.backend.selected === "fanalite-server") {
+            return postNodeServerSignup();
+        } else if (config.backend.selected === "firebase") {
+            return postFirebaseSignup();
+        } else if (config.backend.selected === "stub-server") {
+            return postStubServerSignup();
+        } else {
+            console.log("Invalid backend option: ", config.backend.selected);
+        }
+    }
+
+    function postStubServerSignup() {
+
+    }
 
     function postNodeServerSignup() {
         if (password && password === confirmPassword) {
@@ -20,8 +37,8 @@ function SignupForm() {
                 email: userName,
                 password
             }).then(result => {
-                console.log("result.status:", result.status);
-                console.log("result.data:", result.data);
+                // console.log("result.status:", result.status);
+                // console.log("result.data:", result.data);
 
                 if (result.status === 201) {
                     setRegistered(true);
@@ -49,7 +66,7 @@ function SignupForm() {
         } 
     }
 
-    if (isRegesitered) {
+    if (isRegistered) {
         return <Redirect to="/signin" />
     }
 
@@ -60,10 +77,10 @@ function SignupForm() {
                 <Input type="email" placeholder="email" onChange={e => setUserName(e.target.value)} />
                 <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
                 <Input type="password" placeholder="confirm password" onChange={e => setConfirmPassword(e.target.value)} />
-                <Button onClick={postNodeServerSignup}>Sign Up</Button>
+                <Button onClick={serverSignup}>Sign Up</Button>
             </Form>
             <Link to="/signin">Already have an account?</Link>
-            { isError && <Error>The username or password is incorrect</Error>}
+            { isError && <Error>Error registering user</Error>}
         </Card>
     );
 }

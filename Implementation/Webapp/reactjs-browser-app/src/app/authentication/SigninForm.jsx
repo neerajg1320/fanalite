@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import { firebaseAuth } from '../../firebaseConfig';
 
-import config from '../config/default.json';
+import config from '../config/default';
 
 function SigninForm() {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -23,13 +23,25 @@ function SigninForm() {
     // function. Hence we monitor for the setting of authTokens
     // caused by App's useEffect function
     useEffect(() => {
-        console.log("SigninForm: useEffect(): authTokens:", authTokens)
+        // console.log("SigninForm: useEffect(): authTokens:", authTokens)
         if(authTokens) {
             setLoggedIn(true);
         }
     }, [authTokens]);
 
-    function postNodeStubLogin() {
+    function serverLogin() {
+        if (config.backend.selected === "fanalite-server") {
+            return postNodeServerLogin();
+        } else if (config.backend.selected === "firebase") {
+            return postFirebaseLogin();
+        } else if (config.backend.selected === "stub-server") {
+            return postStubServerLogin();
+        } else {
+            console.log("Invalid backend option: ", config.backend.selected);
+        }
+    }
+
+    function postStubServerLogin() {
         axios.post(config.stub_server, {
             userName,
             password
@@ -55,8 +67,8 @@ function SigninForm() {
             email: userName,
             password
         }).then(result => {
-            console.log("result.status:", result.status);
-            console.log("result.data:", result.data);
+            // console.log("result.status:", result.status);
+            // console.log("result.data:", result.data);
 
             if (result.status === 201) {
                 setAuthTokens(result.data)
@@ -94,7 +106,7 @@ function SigninForm() {
                 <Input type="email" placeholder="email" onChange={e => setUserName(e.target.value)} />
                 <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
                 {/* <Button onClick={postLogin}>Sign In</Button> */}
-                <Button onClick={postNodeServerLogin}>Sign In</Button>
+                <Button onClick={serverLogin}>Sign In</Button>
             </Form>
             <Link to="/signup">Don't have an account?</Link>
             { isError && <Error>The username or password is incorrect</Error>}

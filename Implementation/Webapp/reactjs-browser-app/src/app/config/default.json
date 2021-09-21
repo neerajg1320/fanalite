@@ -1,4 +1,9 @@
 {
+
+    "backend": {
+      "options": ["stub-server", "firebase", "fanalite-server"],
+      "selected": "fanalite-server"
+    },
     "server": {
       "login": "http://localhost:3030/authentication",
       "register": "http://localhost:3030/users"

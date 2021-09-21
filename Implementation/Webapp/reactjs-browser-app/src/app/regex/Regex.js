@@ -32,12 +32,7 @@ function Regex() {
           const datetimeEpoch = regexListSnaphot[id].datetime;
           const datetime = datetimeEpoch ? format(new Date(datetimeEpoch), 'yyyy/MM/dd HH:mm:ss SSS') : 'NA';
 
-          regexList.push({
-            id, 
-            title,
-            regex, 
-            datetime
-          });
+          regexList.push({id, title, regex, datetime});
         }
         
         // console.log('regexList:', regexList);
