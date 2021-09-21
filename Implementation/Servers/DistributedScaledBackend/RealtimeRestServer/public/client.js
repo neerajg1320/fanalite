@@ -251,7 +251,7 @@ const customHandler = message => {
 };
 
 // Listen to created events and add the new message in real-time
-client.service('messages').on('custom', customHandler);
+client.service('messages').on('kafkaTransaction', customHandler);
 
 // Listen to created events and add the new message in real-time
 client.service('messages').on('created', addMessage);
