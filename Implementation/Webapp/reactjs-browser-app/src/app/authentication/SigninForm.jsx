@@ -50,7 +50,7 @@ function SigninForm() {
     }
 
     function postNodeServerLogin() {
-        axios.post(config.node_server, {
+        axios.post(config.server.login, {
             strategy: "local",
             email: userName,
             password
@@ -79,6 +79,7 @@ function SigninForm() {
         })
         .catch((e) => {
             console.log("Firebase: exception: ", e.message);
+            setIsError(true);
         })        
     }
 
