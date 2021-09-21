@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.fanalite.rulesapp.models.Language
-import com.fanalite.rulesapp.retrofitRegex.RegexService
+import com.fanalite.rulesapp.retrofitRegex.RegexValidateService
 import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
@@ -148,8 +148,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
 
     fun validateRegex(regexStr: String, language: Language) {
         val regexService = when (language) {
-                Language.JAVA -> RegexService.getRegexJavaApi()
-                Language.PYTHON -> RegexService.getRegexPythonApi()
+                Language.JAVA -> RegexValidateService.getRegexJavaApi()
+                Language.PYTHON -> RegexValidateService.getRegexPythonApi()
                 else -> null
             }
 

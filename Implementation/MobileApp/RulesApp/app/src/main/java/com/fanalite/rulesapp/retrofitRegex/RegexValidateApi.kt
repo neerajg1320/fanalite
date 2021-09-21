@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface RegexApi {
+interface RegexValidateApi {
     @POST("regex/validate")
     suspend fun validateRegex(@Body request: RegexValidateRequest): Response<RegexValidateResponse>
 }
