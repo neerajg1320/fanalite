@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.retrofitRegex.models
+package com.fanalite.rulesapp.retrofitRegexValidate.models
 
 data class RegexValidateResponse (
     val status: String,

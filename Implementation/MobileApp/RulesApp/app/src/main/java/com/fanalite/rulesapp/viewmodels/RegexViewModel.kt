@@ -7,19 +7,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.fanalite.rulesapp.models.Language
-import com.fanalite.rulesapp.retrofitRegex.RegexValidateService
-import com.fanalite.rulesapp.retrofitRegex.models.RegexValidateRequest
+import com.fanalite.rulesapp.retrofitRegexValidate.RegexValidateService
+import com.fanalite.rulesapp.retrofitRegexValidate.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.repository.RemoteFirebaseRepository
 import com.fanalite.rulesapp.repository.RegexLocalRoomRepository
+import com.fanalite.rulesapp.repository.RegexResourceRepository
 import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.*
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val localRepository = RegexLocalRoomRepository(regexDao)
-    private val remoteRepository = RemoteFirebaseRepository()
+    private val remoteFirebaseRepository = RemoteFirebaseRepository()
+    private val regexResourceRepository = RegexResourceRepository();
 
     private val localEnabled = false
     private val remoteEnabled = true
@@ -44,7 +46,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 var regexList: List<RegexModel> = emptyList()
 
 
-                regexList = remoteRepository.getAllData(RegexModel::class.java) as List<RegexModel>
+                regexList = remoteFirebaseRepository.getAllData(RegexModel::class.java) as List<RegexModel>
 
 
                 Log.d(TAG, "RegexViewModel: regexList: $regexList")
@@ -62,7 +64,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
             id = localRepository.generateId()
         }
         if (remoteEnabled) {
-            id = remoteRepository.generateId()
+            id = remoteFirebaseRepository.generateId()
         }
 
         return id
@@ -76,7 +78,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.insertData(regexModel)
             }
             if (remoteEnabled) {
-                remoteRepository.insertData(regexModel.id, regexModel)
+                // remoteFirebaseRepository.insertData(regexModel.id, regexModel)
+                regexResourceRepository.insertRule(regexModel)
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -91,7 +94,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.updateData(regexModel)
             }
             if (remoteEnabled) {
-                remoteRepository.updateData(regexModel.id, regexModel)
+                remoteFirebaseRepository.updateData(regexModel.id, regexModel)
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -106,7 +109,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.deleteItem(regexModel)
             }
             if (remoteEnabled) {
-                remoteRepository.deleteData(regexModel.id)
+                remoteFirebaseRepository.deleteData(regexModel.id)
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -121,7 +124,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.deleteAll()
             }
             if (remoteEnabled) {
-                remoteRepository.deleteAll()
+                remoteFirebaseRepository.deleteAll()
             }
             withContext(Dispatchers.Main) {
                 // Inform the view

@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.retrofitRegex
+package com.fanalite.rulesapp.retrofitRegexValidate
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
