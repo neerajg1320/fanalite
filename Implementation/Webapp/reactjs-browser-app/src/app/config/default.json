@@ -1,0 +1,4 @@
+{
+    "node_server": "http://localhost:3030/authenticate",
+    "stub_server": "http://localhost:8080/login"
+}

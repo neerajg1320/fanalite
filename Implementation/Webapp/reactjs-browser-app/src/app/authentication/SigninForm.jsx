@@ -7,6 +7,8 @@ import axios from 'axios';
 
 import { firebaseAuth } from '../../firebaseConfig';
 
+import config from '../config/default.json';
+
 function SigninForm() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -27,12 +29,14 @@ function SigninForm() {
         }
     }, [authTokens]);
 
-    function postLogin() {
-        axios.post("http://localhost:8080/login", {
+    function postNodeServerLogin() {
+        axios.post(config.stub_server, {
             userName, 
             password
         }).then(result => {
-            console.log("result.status:", result.status)
+            console.log("result.status:", result.status);
+            console.log("result.data:", result.data);
+
             if (result.status === 200) {
                 setAuthTokens(result.data)
                 setLoggedIn(true);
@@ -68,7 +72,7 @@ function SigninForm() {
                 <Input type="email" placeholder="email" onChange={e => setUserName(e.target.value)} />
                 <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
                 {/* <Button onClick={postLogin}>Sign In</Button> */}
-                <Button onClick={postFirebaseLogin}>Sign In</Button>
+                <Button onClick={postNodeServerLogin}>Sign In</Button>
             </Form>
             <Link to="/signup">Don't have an account?</Link>
             { isError && <Error>The username or password is incorrect</Error>}
