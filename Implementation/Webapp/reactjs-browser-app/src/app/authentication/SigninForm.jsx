@@ -29,15 +29,36 @@ function SigninForm() {
         }
     }, [authTokens]);
 
-    function postNodeServerLogin() {
+    function postNodeStubLogin() {
         axios.post(config.stub_server, {
-            userName, 
+            userName,
             password
         }).then(result => {
             console.log("result.status:", result.status);
             console.log("result.data:", result.data);
 
             if (result.status === 200) {
+                setAuthTokens(result.data)
+                setLoggedIn(true);
+            } else {
+                setIsError(true);
+            }
+        }).catch(e => {
+            console.log("exception:", e.message)
+            setIsError(true);
+        })
+    }
+
+    function postNodeServerLogin() {
+        axios.post(config.node_server, {
+            strategy: "local",
+            email: userName,
+            password
+        }).then(result => {
+            console.log("result.status:", result.status);
+            console.log("result.data:", result.data);
+
+            if (result.status === 201) {
                 setAuthTokens(result.data)
                 setLoggedIn(true);
             } else {
