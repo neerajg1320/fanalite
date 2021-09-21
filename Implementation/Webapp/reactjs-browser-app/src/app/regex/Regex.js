@@ -7,7 +7,10 @@ import { AddCircleOutlineRounded, DeleteOutlineRounded, Edit } from '@material-u
 import { Button, TextField, Container, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, Dialog, DialogContent, DialogActions } from '@material-ui/core';
 
 import {format} from 'date-fns';
+import axios from 'axios';
 
+import config from '../config/default';
+import {useAuth} from "../authentication/AuthContext";
 
 function Regex() {
     const resource = 'regexModels';
@@ -19,68 +22,156 @@ function Regex() {
     const [updateTitle, setUpdateTitle] = useState('');
     const [updateRegex, setUpdateRegex] = useState('');
     const [currentId, setCurrentId] = useState('');
-  
-  
-    useEffect(() => {
-      // .once can be used for onetime only
-      realtimeDatabase.ref(resource).on('value', (snapshot) => {
-        const regexListSnaphot = snapshot.val();
-        const regexList = [];
-        for (let id in regexListSnaphot) {
-          const title = regexListSnaphot[id].title;
-          const regex = regexListSnaphot[id].regex;
-          const datetimeEpoch = regexListSnaphot[id].datetime;
-          const datetime = datetimeEpoch ? format(new Date(datetimeEpoch), 'yyyy/MM/dd HH:mm:ss SSS') : 'NA';
 
-          regexList.push({id, title, regex, datetime});
-        }
-        
-        // console.log('regexList:', regexList);
-        
-        setRegexList(regexList);
-      })
-  
+    const { authTokens, setAuthTokens } = useAuth();
+
+    useEffect(() => {
+        getRegexList();
     }, []);
+
+    const getRegexList = () => {
+        if (config.backend.selected === "firebase") {
+            // .once can be used for onetime only
+            realtimeDatabase.ref(resource).on('value', (snapshot) => {
+                const regexListSnaphot = snapshot.val();
+                const regexList = [];
+                for (let id in regexListSnaphot) {
+                    const title = regexListSnaphot[id].title;
+                    const regex = regexListSnaphot[id].regex;
+                    const datetimeEpoch = regexListSnaphot[id].datetime;
+                    const datetime = datetimeEpoch ? format(new Date(datetimeEpoch), 'yyyy/MM/dd HH:mm:ss SSS') : 'NA';
+
+                    regexList.push({id, title, regex, datetime});
+                }
+
+                setRegexList(regexList);
+            })
+        } if (config.backend.selected === "fanalite-server") {
+            const getRegexListServer = async () => {
+                const regexList = [];
+                const response = await axios.get(config.server.resources.rules,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authTokens.accessToken}`
+                        }
+                    });
+
+                console.log(response.data);
+                const list = response.data.data;
+                for (let item in list) {
+                    console.log("item:", list[item]);
+                    const title = list[item].title;
+                    const regex = list[item].regex;
+                    const id = list[item]
+                    const datetime = 'NA';
+
+                    regexList.push({id, title, regex, datetime});
+                }
+                setRegexList(regexList);
+            };
+
+            getRegexListServer();
+        }
+    }
   
     // On addition we get two value event with different timestamps
     const addRegex = (event) => {
       event.preventDefault();
-  
-      const id = realtimeDatabase.ref(resource).push().key
 
-      realtimeDatabase.ref(resource).child(id).set({
-        id,
-        title,
-        regex, 
-        datetime: firebase.database.ServerValue.TIMESTAMP
-      })
+        if (config.backend.selected === "firebase") {
+            const id = realtimeDatabase.ref(resource).push().key;
+
+            realtimeDatabase.ref(resource).child(id).set({
+                id,
+                title,
+                regex,
+                datetime: firebase.database.ServerValue.TIMESTAMP
+            });
+        } else if (config.backend.selected === "fanalite-server") {
+            const addRegexServer = async () => {
+                const newRegex = {title, regex};
+                const response = await axios.post(config.server.resources.rules,
+                    newRegex,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authTokens.accessToken}`
+                        }
+                    });
+
+                console.log("response.data:", response.data);
+            };
+
+            addRegexServer();
+        }
   
       // Check if we can declare successful addition.
       setTitle('');
       setRegex('');
+      getRegexList();
     }
   
     const deleteRegex = (id) => {
-      realtimeDatabase.ref(resource).child(id).remove();
+        if (config.backend.selected === "firebase") {
+            realtimeDatabase.ref(resource).child(id).remove();
+        } else if (config.backend.selected === "fanalite-server") {
+            console.log("Delete Regex: ", id);
+            const deleteRegexServer = async () => {
+                const response = await axios.delete(config.server.resources.rules + "/" + id._id,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authTokens.accessToken}`
+                        }
+                    });
+
+                console.log("response.data:", response.data);
+            };
+
+            deleteRegexServer();
+        }
+        getRegexList();
     }
   
-    const openUpdateDialog = (regexItem) => {
-      setOpen(true);
-      setCurrentId(regexItem.id);
-      setUpdateTitle(regexItem.title);
-      setUpdateRegex(regexItem.regex);
-    }
-  
+
     const editRegex = () => {
-      realtimeDatabase.ref(resource).child(currentId).set({
-        id:currentId,
-        title: updateTitle,
-        regex: updateRegex,
-        datetime: firebase.database.ServerValue.TIMESTAMP
-      })
-      setOpen(false);
-    }
-  
+        if (config.backend.selected === "firebase") {
+            realtimeDatabase.ref(resource).child(currentId).set({
+                id: currentId,
+                title: updateTitle,
+                regex: updateRegex,
+                datetime: firebase.database.ServerValue.TIMESTAMP
+            });
+        } else if (config.backend.selected === "fanalite-server") {
+            console.log("Update Regex: ", currentId);
+            const updateRegexServer = async () => {
+                const response = await axios.put(config.server.resources.rules + "/" + currentId._id,
+                    {
+                        title: updateTitle,
+                        regex: updateRegex
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authTokens.accessToken}`
+                        }
+                    });
+
+                console.log("response.data:", response.data);
+            };
+
+            updateRegexServer();
+        }
+
+        setOpen(false);
+        getRegexList();
+    };
+
+
+    const openUpdateDialog = (regexItem) => {
+        setOpen(true);
+        setCurrentId(regexItem.id);
+        setUpdateTitle(regexItem.title);
+        setUpdateRegex(regexItem.regex);
+    };
+
     const handleClose = () => {
       setOpen(false);
     };

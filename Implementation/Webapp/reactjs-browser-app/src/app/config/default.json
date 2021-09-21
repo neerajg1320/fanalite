@@ -6,7 +6,10 @@
     },
     "server": {
       "login": "http://localhost:3030/authentication",
-      "register": "http://localhost:3030/users"
+      "register": "http://localhost:3030/users",
+      "resources" : {
+        "rules": "http://localhost:3030/rules"
+      }
     },
 
     "stub_server": "http://localhost:8080/login"
