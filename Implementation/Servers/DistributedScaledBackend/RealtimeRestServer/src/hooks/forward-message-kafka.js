@@ -12,7 +12,7 @@ module.exports = (options = {}) => {
     const kafkaProducer = app.get('kafkaProducer');
 
     await kafkaProducer.send({
-      topic: "text",
+      topic: "messages",
       messages: [
         {
           value: data.text

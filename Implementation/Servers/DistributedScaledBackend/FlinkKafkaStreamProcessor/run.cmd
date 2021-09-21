@@ -22,9 +22,9 @@ bin/kafka-server-start.sh config/server.properties
 
 # Terminal 3:
 # Start Flink application. 
-# The application listen to messages on topic 'text' and produced the results on topic 'transactions'
+# The application listen to messages on topic 'messages' and produced the results on topic 'transactions'
 cd /home/neeraj/mac_project/fanalite/Implementation/Servers/DistributedScaledBackend/FlinkKafkaStreamProcessor
-~/Projects/Flink/flink-1.5.0/bin/flink run ./target/FlinkKafkaStreamProcessor-0.1-jar-with-dependencies.jar --kafka-host localhost:9092  --input-topic text --output-topic transactions
+~/Projects/Flink/flink-1.5.0/bin/flink run ./target/FlinkKafkaStreamProcessor-0.1-jar-with-dependencies.jar --kafka-host localhost:9092  --input-topic messages --output-topic transactions
 
 
 # Terminal 2:
