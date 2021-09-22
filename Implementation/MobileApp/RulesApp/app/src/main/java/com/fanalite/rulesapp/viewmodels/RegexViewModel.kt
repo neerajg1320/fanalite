@@ -19,10 +19,15 @@ import kotlinx.coroutines.*
 import java.net.ConnectException
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
+    // We shall retrieve the Tokens from here if we have to retrieve them from SharedPreferences
+    // This way we keep the repository code independent of the Android Context
+    private val AUTH_TOKEN_TYPE = "Bearer"
+    private val AUTH_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MzIyOTExMDQsImV4cCI6MTYzMjM3NzUwNCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiRFdET3kxY3dKbHc4SFB3OCIsImp0aSI6ImM3Y2FhZDI1LTA1NjctNGEyZC1iMTVjLWVhZjJjNGQyZDkxYiJ9.Ara_PrUvPalfJcckab5jPT6PBvR0J7dI3PE7lMg0TcM"
+
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val localRepository = RegexLocalRoomRepository(regexDao)
     private val remoteFirebaseRepository = RemoteFirebaseRepository()
-    private val regexResourceRepository = RegexResourceRepository();
+    private val regexResourceRepository = RegexResourceRepository(AUTH_TOKEN_TYPE, AUTH_ACCESS_TOKEN);
 
     private val localEnabled = false
     private val remoteEnabled = true

@@ -6,9 +6,9 @@ import com.fanalite.rulesapp.retrofitRegexResource.RegexResourceApi
 import com.fanalite.rulesapp.retrofitRegexResource.RegexResourceService
 import com.fanalite.rulesapp.view.TAG
 
-class RegexResourceRepository {
+class RegexResourceRepository(authTokenType:String, authAccessToken:String) {
 
-    private var regexResourceApi: RegexResourceApi = RegexResourceService.create();
+    private var regexResourceApi: RegexResourceApi = RegexResourceService.create(authTokenType, authAccessToken);
 
     suspend fun insertRule(rule:RegexModel) {
         val regexResponse = regexResourceApi.create(rule)
