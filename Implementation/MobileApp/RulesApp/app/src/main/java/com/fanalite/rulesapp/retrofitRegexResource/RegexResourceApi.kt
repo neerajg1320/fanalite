@@ -3,15 +3,19 @@ package com.fanalite.rulesapp.retrofitRegexResource
 import com.fanalite.rulesapp.models.RegexModel
 import com.fanalite.rulesapp.retrofitRegexResource.models.RegexGetAllResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RegexResourceApi {
 
     @POST("rules")
-    suspend fun create(@Body request: RegexModel): Response<RegexModel>
+    suspend fun createRule(@Body request: RegexModel): Response<RegexModel>
 
     @GET("rules")
     suspend fun getAll(): Response<RegexGetAllResponse>
+
+    @PUT("rules/{rule_id}")
+    suspend fun updateRule(@Path(value="rule_id") rule_id:String, @Body request: RegexModel): Response<RegexModel>
+
+    @DELETE("rules/{rule_id}")
+    suspend fun deleteRule(@Path(value="rule_id") rule_id:String): Response<RegexModel>
 }

@@ -22,7 +22,7 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     // We shall retrieve the Tokens from here if we have to retrieve them from SharedPreferences
     // This way we keep the repository code independent of the Android Context
     private val AUTH_TOKEN_TYPE = "Bearer"
-    private val AUTH_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MzIyOTExMDQsImV4cCI6MTYzMjM3NzUwNCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiRFdET3kxY3dKbHc4SFB3OCIsImp0aSI6ImM3Y2FhZDI1LTA1NjctNGEyZC1iMTVjLWVhZjJjNGQyZDkxYiJ9.Ara_PrUvPalfJcckab5jPT6PBvR0J7dI3PE7lMg0TcM"
+    private val AUTH_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MzIzMDE0MjQsImV4cCI6MTYzMjM4NzgyNCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoidWExZ2QzbUxkelBPQjNBMyIsImp0aSI6IjNlMDgyNDQ0LWY5MzYtNGU1ZC05MDM2LWQwNzM0NWNhM2E2YiJ9.CHQcrr7jZ8UBVfgJ5nEFkGRkqjHjW-94B2ypQjvknI4"
 
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val localRepository = RegexLocalRoomRepository(regexDao)
@@ -110,7 +110,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.updateData(regexModel)
             }
             if (remoteEnabled) {
-                remoteFirebaseRepository.updateData(regexModel.id, regexModel)
+                // remoteFirebaseRepository.updateData(regexModel.id, regexModel)
+                regexResourceRepository.updateRule(regexModel.id, regexModel)
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -125,7 +126,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 localRepository.deleteItem(regexModel)
             }
             if (remoteEnabled) {
-                remoteFirebaseRepository.deleteData(regexModel.id)
+                // remoteFirebaseRepository.deleteData(regexModel.id)
+                regexResourceRepository.deleteRule(regexModel.id);
             }
             withContext(Dispatchers.Main) {
                 // Inform the view

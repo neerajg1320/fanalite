@@ -11,7 +11,7 @@ class RegexResourceRepository(authTokenType:String, authAccessToken:String) {
     private var regexResourceApi: RegexResourceApi = RegexResourceService.create(authTokenType, authAccessToken);
 
     suspend fun insertRule(rule:RegexModel) {
-        val regexResponse = regexResourceApi.create(rule)
+        val regexResponse = regexResourceApi.createRule(rule)
         val regexModel = regexResponse.body();
         Log.d(TAG, "regex stored id=${regexModel?.id}");
     }
@@ -30,5 +30,14 @@ class RegexResourceRepository(authTokenType:String, authAccessToken:String) {
         }
 
         return regexList ?: emptyList();
+    }
+    suspend fun updateRule(id:String, rule:RegexModel) {
+        val regexResponse = regexResourceApi.updateRule(id, rule)
+    }
+
+    suspend fun deleteRule(id:String) {
+        val regexResponse = regexResourceApi.deleteRule(id)
+        val regexModel = regexResponse.body();
+        Log.d(TAG, "regex deleted id=${regexModel?.id}");
     }
 }
