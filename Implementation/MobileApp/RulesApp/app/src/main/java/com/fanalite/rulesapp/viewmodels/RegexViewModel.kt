@@ -16,6 +16,7 @@ import com.fanalite.rulesapp.repository.RegexLocalRoomRepository
 import com.fanalite.rulesapp.repository.RegexResourceRepository
 import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.*
+import java.net.ConnectException
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
@@ -25,6 +26,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
 
     private val localEnabled = false
     private val remoteEnabled = true
+    // firebase, fanalite-server
+    private val remoteEnd = "fanalite-server";
 
     private var job: Job? = null
     private val mutableLiveData: MutableLiveData<List<RegexModel>> = MutableLiveData()
@@ -46,8 +49,16 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                 var regexList: List<RegexModel> = emptyList()
 
 
-                regexList = remoteFirebaseRepository.getAllData(RegexModel::class.java) as List<RegexModel>
-
+                if (remoteEnd == "firebase") {
+                    regexList =
+                        remoteFirebaseRepository.getAllData(RegexModel::class.java) as List<RegexModel>
+                } else if (remoteEnd == "fanalite-server") {
+                    try {
+                        regexList = regexResourceRepository.getAllRules();
+                    } catch (e: ConnectException) {
+                        Log.e(TAG, e.localizedMessage);
+                    }
+                }
 
                 Log.d(TAG, "RegexViewModel: regexList: $regexList")
                 withContext(Dispatchers.Main) {
