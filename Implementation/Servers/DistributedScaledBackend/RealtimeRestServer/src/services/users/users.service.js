@@ -6,6 +6,7 @@ const hooks = require('./users.hooks');
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
+    // We faced issue when we set id: "id" in user. So we are delaying it.
     paginate: app.get('paginate')
   };
 

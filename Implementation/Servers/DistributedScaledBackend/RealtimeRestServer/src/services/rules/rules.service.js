@@ -4,6 +4,7 @@ const hooks = require('./rules.hooks');
 
 module.exports = function (app) {
   const options = {
+    id: "id",
     paginate: app.get('paginate')
   };
 

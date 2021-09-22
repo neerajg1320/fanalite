@@ -6,6 +6,7 @@ const hooks = require('./messages.hooks');
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
+    id: "id",
     events: ['kafkaTransaction'],
     paginate: app.get('paginate')
   };
