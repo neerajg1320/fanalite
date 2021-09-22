@@ -11,8 +11,8 @@ import retrofit2.http.POST
 interface RegexResourceApi {
 
     @POST("rules")
-    suspend fun create(@Body request: RegexModel, @Header("Authorization") authHeader:String): Response<RegexModel>
+    suspend fun create(@Body request: RegexModel): Response<RegexModel>
 
     @GET("rules")
-    suspend fun getAll(@Header("Authorization") authHeader:String): Response<RegexGetAllResponse>
+    suspend fun getAll(): Response<RegexGetAllResponse>
 }
