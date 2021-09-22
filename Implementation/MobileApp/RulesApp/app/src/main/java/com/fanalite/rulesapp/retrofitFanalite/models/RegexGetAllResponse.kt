@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.retrofitRegexResource.models
+package com.fanalite.rulesapp.retrofitFanalite.models
 
 import com.fanalite.rulesapp.models.RegexModel
 

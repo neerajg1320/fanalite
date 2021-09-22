@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.retrofitRegexResource
+package com.fanalite.rulesapp.retrofitFanalite
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -11,9 +11,10 @@ import com.fanalite.rulesapp.retrofitRegexValidate.RegexValidateService
 import com.fanalite.rulesapp.retrofitRegexValidate.models.RegexValidateRequest
 import com.fanalite.rulesapp.roomAppDatabase.AppDatabase
 import com.fanalite.rulesapp.models.RegexModel
+import com.fanalite.rulesapp.repository.FanaliteAuthRepository
 import com.fanalite.rulesapp.repository.RemoteFirebaseRepository
 import com.fanalite.rulesapp.repository.RegexLocalRoomRepository
-import com.fanalite.rulesapp.repository.RegexResourceRepository
+import com.fanalite.rulesapp.repository.FanaliteResourceRepository
 import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.*
 import java.net.ConnectException
@@ -27,7 +28,8 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val localRepository = RegexLocalRoomRepository(regexDao)
     private val remoteFirebaseRepository = RemoteFirebaseRepository()
-    private val regexResourceRepository = RegexResourceRepository(AUTH_TOKEN_TYPE, AUTH_ACCESS_TOKEN);
+    private val regexResourceRepository = FanaliteResourceRepository(AUTH_TOKEN_TYPE, AUTH_ACCESS_TOKEN);
+
 
     private val localEnabled = false
     private val remoteEnabled = true

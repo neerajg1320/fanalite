@@ -2,13 +2,13 @@ package com.fanalite.rulesapp.repository
 
 import android.util.Log
 import com.fanalite.rulesapp.models.RegexModel
-import com.fanalite.rulesapp.retrofitRegexResource.RegexResourceApi
-import com.fanalite.rulesapp.retrofitRegexResource.RegexResourceService
+import com.fanalite.rulesapp.retrofitFanalite.RegexResourceApi
+import com.fanalite.rulesapp.retrofitFanalite.RegexResourceService
 import com.fanalite.rulesapp.view.TAG
 
-class RegexResourceRepository(authTokenType:String, authAccessToken:String) {
+class FanaliteResourceRepository(authTokenType:String, authAccessToken:String) {
 
-    private var regexResourceApi: RegexResourceApi = RegexResourceService.create(authTokenType, authAccessToken);
+    private var regexResourceApi: RegexResourceApi = RegexResourceService.createRegexResource(authTokenType, authAccessToken);
 
     suspend fun insertRule(rule:RegexModel) {
         val regexResponse = regexResourceApi.createRule(rule)

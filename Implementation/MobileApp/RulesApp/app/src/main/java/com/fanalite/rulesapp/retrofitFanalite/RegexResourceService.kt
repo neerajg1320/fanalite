@@ -1,4 +1,4 @@
-package com.fanalite.rulesapp.retrofitRegexResource
+package com.fanalite.rulesapp.retrofitFanalite
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -11,7 +11,7 @@ object RegexResourceService {
 
     // We have kept the creation of dependencies in the function so that in future we can create
     // connection to multiple API endpoints using this same service
-    fun create(authTokenType:String, authAccessToken:String): RegexResourceApi {
+    fun createRegexResource(authTokenType:String, authAccessToken:String): RegexResourceApi {
         val authClient = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(authTokenType, authAccessToken))
             .build()
@@ -23,5 +23,14 @@ object RegexResourceService {
             .build();
 
         return retrofit.create(RegexResourceApi::class.java)
+    }
+
+    fun createAuthenticationService(): AuthenticationApi {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+        return retrofit.create(AuthenticationApi::class.java)
     }
 }

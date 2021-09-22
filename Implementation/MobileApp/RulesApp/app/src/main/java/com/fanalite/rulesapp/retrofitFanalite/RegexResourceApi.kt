@@ -1,7 +1,7 @@
-package com.fanalite.rulesapp.retrofitRegexResource
+package com.fanalite.rulesapp.retrofitFanalite
 
 import com.fanalite.rulesapp.models.RegexModel
-import com.fanalite.rulesapp.retrofitRegexResource.models.RegexGetAllResponse
+import com.fanalite.rulesapp.retrofitFanalite.models.RegexGetAllResponse
 import retrofit2.Response
 import retrofit2.http.*
 
