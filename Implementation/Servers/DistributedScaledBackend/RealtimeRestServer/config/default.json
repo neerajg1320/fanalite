@@ -6,6 +6,9 @@
     "default": 10,
     "max": 50
   },
+  "debug": {
+    "api": true
+  },
   "authentication": {
     "entity": "user",
     "service": "users",
@@ -38,6 +41,7 @@
   "nedb": "../data",
   "mongodb": "mongodb+srv://neeraj:Feathers@cluster0.95lt1.mongodb.net/myFirstDatabase",
   "kafka": {
+    "active": false,
     "brokers":["ubuntu-18:9092"],
     "producer": {
       "sendActivationMessage": false

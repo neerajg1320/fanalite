@@ -6,8 +6,11 @@ module.exports = (options = {}) => {
   return async context => {
     const { app, data } = context;
 
-    // console.log("[hook:forward-message-kafka]:", data);
+    const kafkaConfig = app.get('kafka');
 
+    if (!kafkaConfig.active) {
+      return;
+    }
 
     const kafkaProducer = app.get('kafkaProducer');
 

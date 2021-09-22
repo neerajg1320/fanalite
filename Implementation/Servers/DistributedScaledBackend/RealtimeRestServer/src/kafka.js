@@ -3,6 +3,10 @@ const Kafka = require('kafkajs').Kafka;
 module.exports = async function (app) {
   const kafkaConfig = app.get('kafka');
 
+  if (!kafkaConfig.active) {
+    return;
+  }
+
   const kafkaClient = new Kafka(kafkaConfig);
   const kafkaConsumer = kafkaClient.consumer({groupId: kafkaConfig.consumer.groupName});
 
