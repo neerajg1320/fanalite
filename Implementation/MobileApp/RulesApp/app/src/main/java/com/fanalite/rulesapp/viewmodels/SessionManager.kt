@@ -15,10 +15,18 @@ class SessionManager(context: Context) {
     fun saveAuthToken(token: String) {
         val editor = prefs.edit()
         editor.putString(USER_TOKEN, token)
+        // Write changes asynchronously
         editor.apply()
     }
 
     fun fetchAuthToken(): String? {
         return prefs.getString(USER_TOKEN, null)
+    }
+
+    fun clearAuthToken() {
+        val editor = prefs.edit()
+        editor.remove(USER_TOKEN)
+        // Write changes synchronously
+        editor.commit()
     }
 }

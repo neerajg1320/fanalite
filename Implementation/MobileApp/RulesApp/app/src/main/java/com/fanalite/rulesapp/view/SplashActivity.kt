@@ -31,12 +31,15 @@ class SplashActivity : AppCompatActivity() {
         val slideAnimation = AnimationUtils.loadAnimation(this, R.anim.side_slide)
         backgroundImage.startAnimation(slideAnimation)
 
+        // Right now we will login everytime
+        sessionManager.clearAuthToken()
+
         mAuthViewModel.token.observe(this, Observer { token ->
             sessionManager.saveAuthToken(token)
         })
 
         if (sessionManager.fetchAuthToken() == null) {
-            mAuthViewModel.loginUser("alice@abc.com", "Alice123")
+            mAuthViewModel.loginUser("system@abc.com", "System123")
         }
 
         GlobalScope.launch {

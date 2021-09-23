@@ -20,16 +20,21 @@ import kotlinx.coroutines.*
 import java.net.ConnectException
 
 class RegexViewModel(application: Application): AndroidViewModel(application) {
-    // We shall retrieve the Tokens from here if we have to retrieve them from SharedPreferences
-    // This way we keep the repository code independent of the Android Context
-    private val AUTH_TOKEN_TYPE = "Bearer"
-    private val AUTH_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2MzIzMDE0MjQsImV4cCI6MTYzMjM4NzgyNCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoidWExZ2QzbUxkelBPQjNBMyIsImp0aSI6IjNlMDgyNDQ0LWY5MzYtNGU1ZC05MDM2LWQwNzM0NWNhM2E2YiJ9.CHQcrr7jZ8UBVfgJ5nEFkGRkqjHjW-94B2ypQjvknI4"
 
     private val regexDao = AppDatabase.getDatabase(application).regexDao()
     private val localRepository = RegexLocalRoomRepository(regexDao)
     private val remoteFirebaseRepository = RemoteFirebaseRepository()
-    private val regexResourceRepository = FanaliteResourceRepository(AUTH_TOKEN_TYPE, AUTH_ACCESS_TOKEN);
+    private var fanaliteRepository:FanaliteResourceRepository? = null
 
+    // We retrieve the Tokens here from SharedPreferences
+    // This way we keep the repository code independent of the Android Context
+    init {
+        val sessionManager = SessionManager(application)
+        val authToken = sessionManager.fetchAuthToken()
+        if (authToken != null) {
+            fanaliteRepository = FanaliteResourceRepository("Bearer", authToken);
+        }
+    }
 
     private val localEnabled = false
     private val remoteEnabled = true
@@ -61,7 +66,9 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
                         remoteFirebaseRepository.getAllData(RegexModel::class.java) as List<RegexModel>
                 } else if (remoteEnd == "fanalite-server") {
                     try {
-                        regexList = regexResourceRepository.getAllRules();
+                        if (fanaliteRepository != null) {
+                            regexList = fanaliteRepository!!.getAllRules();
+                        }
                     } catch (e: ConnectException) {
                         Log.e(TAG, e.localizedMessage);
                     }
@@ -97,7 +104,9 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
             }
             if (remoteEnabled) {
                 // remoteFirebaseRepository.insertData(regexModel.id, regexModel)
-                regexResourceRepository.insertRule(regexModel)
+                if (fanaliteRepository != null) {
+                    fanaliteRepository!!.insertRule(regexModel)
+                }
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -113,7 +122,9 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
             }
             if (remoteEnabled) {
                 // remoteFirebaseRepository.updateData(regexModel.id, regexModel)
-                regexResourceRepository.updateRule(regexModel.id, regexModel)
+                if (fanaliteRepository != null) {
+                    fanaliteRepository!!.updateRule(regexModel.id, regexModel)
+                }
             }
             withContext(Dispatchers.Main) {
                 // Inform the view
@@ -129,7 +140,9 @@ class RegexViewModel(application: Application): AndroidViewModel(application) {
             }
             if (remoteEnabled) {
                 // remoteFirebaseRepository.deleteData(regexModel.id)
-                regexResourceRepository.deleteRule(regexModel.id);
+                if (fanaliteRepository != null) {
+                    fanaliteRepository!!.deleteRule(regexModel.id);
+                }
             }
             withContext(Dispatchers.Main) {
                 // Inform the view

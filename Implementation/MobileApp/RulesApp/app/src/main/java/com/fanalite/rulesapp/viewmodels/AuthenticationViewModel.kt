@@ -13,6 +13,7 @@ import com.fanalite.rulesapp.view.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.ConnectException
 
 class AuthenticationViewModel(application: Application): AndroidViewModel(application) {
     private val fanaliteAuthRepository = FanaliteAuthRepository()
@@ -23,12 +24,18 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
     fun loginUser(email:String, password:String) {
         Log.d(TAG, "AuthenticationViewModel:loginUser")
         viewModelScope.launch(Dispatchers.IO) {
-            val response:LoginUserResponse? = fanaliteAuthRepository.loginUser(email, password)
-            withContext(Dispatchers.Main) {
-                // Inform the view
-                if (response != null) {
-                    mutableToken.setValue(response.accessToken)
+            try {
+                val response:LoginUserResponse? = fanaliteAuthRepository.loginUser(email, password)
+                Log.d(TAG, "AuthenticationViewModel:loginUser response=${response}")
+
+                withContext(Dispatchers.Main) {
+                    // Inform the view
+                    if (response != null) {
+                        mutableToken.setValue(response.accessToken)
+                    }
                 }
+            } catch (e: ConnectException) {
+                Log.e(TAG, e.localizedMessage);
             }
         }
     }
