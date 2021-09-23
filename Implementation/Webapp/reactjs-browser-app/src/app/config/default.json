@@ -12,5 +12,8 @@
       }
     },
 
-    "stub_server": "http://localhost:8080/login"
+    "stub_server": "http://localhost:8080/login",
+    "authentication": {
+      "active": false
+    }
 }

@@ -3,6 +3,8 @@ import React from 'react';
 import Regex from '../regex/Regex';
 import { useAuth } from '../authentication/AuthContext';
 
+import config from '../config/default';
+
 export default function Dashboard() {
     const { setAuthTokens } = useAuth();
 
@@ -12,9 +14,11 @@ export default function Dashboard() {
 
     return (
         <div>
-            <Card>
-                <Button onClick={signOut}>Sign Out</Button>
-            </Card>
+            {config.authentication.active &&
+                <Card>
+                    <Button onClick={signOut}>Sign Out</Button>
+                </Card>
+            }
             <div style={{margin:"40px"}}></div>
             <Regex/>
         </div>
