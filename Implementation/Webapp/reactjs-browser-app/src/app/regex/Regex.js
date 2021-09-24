@@ -26,8 +26,12 @@ function Regex() {
     const { authTokens, setAuthTokens } = useAuth();
 
     useEffect(() => {
-        getRegexList();
+        refreshList();
     }, []);
+
+    const refreshList = () => {
+        getRegexList();
+    };
 
     const getRegexList = () => {
         if (config.backend.selected === "firebase") {
@@ -99,7 +103,7 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
-                getRegexList();
+                refreshList();
             };
 
             addRegexServer();
@@ -124,7 +128,7 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
-                getRegexList();
+                refreshList();
             };
 
             deleteRegexServer();
@@ -143,7 +147,7 @@ function Regex() {
         } else if (config.backend.selected === "fanalite-server") {
             console.log("Update Regex: ", currentId);
             const updateRegexServer = async () => {
-                const response = await axios.put(config.server.resources.rules + "/" + currentId._id,
+                const response = await axios.put(config.server.resources.rules + "/" + currentId,
                     {
                         title: updateTitle,
                         regex: updateRegex
@@ -155,7 +159,7 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
-                getRegexList();
+                refreshList();
             };
 
             updateRegexServer();
