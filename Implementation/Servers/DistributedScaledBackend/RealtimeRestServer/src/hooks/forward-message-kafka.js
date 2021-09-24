@@ -23,7 +23,7 @@ module.exports = (options = {}) => {
       ]
     });
 
-    // console.log('kafka hook: kafka message sent');
+    console.log('kafka hook: kafka message sent');
 
     return context;
   };

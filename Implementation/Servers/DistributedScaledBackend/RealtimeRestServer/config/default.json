@@ -41,12 +41,14 @@
   "nedb": "../data",
   "mongodb": "mongodb+srv://neeraj:Feathers@cluster0.95lt1.mongodb.net/myFirstDatabase",
   "kafka": {
-    "active": false,
+    "active": true,
     "brokers":["ubuntu-18:9092"],
     "producer": {
-      "sendActivationMessage": false
+      "topic": "messages",
+      "sendActivationMessage": true
     },
     "consumer": {
+      "topic": "transactions",
       "groupName": "NodeApplication"
     }
   }

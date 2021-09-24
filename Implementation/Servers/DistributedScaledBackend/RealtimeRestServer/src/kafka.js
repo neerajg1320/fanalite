@@ -10,7 +10,7 @@ module.exports = async function (app) {
   const kafkaClient = new Kafka(kafkaConfig);
   const kafkaConsumer = kafkaClient.consumer({groupId: kafkaConfig.consumer.groupName});
 
-  await kafkaConsumer.subscribe(({topic: "transactions", fromBeginning: false}));
+  await kafkaConsumer.subscribe(({topic: kafkaConfig.consumer.topic, fromBeginning: false}));
   await kafkaConsumer.run({
     eachMessage: async (data) => {
       console.log("src/kafka.js", data.message.value.toString("utf-8"));
@@ -31,7 +31,7 @@ module.exports = async function (app) {
 
   if (kafkaConfig.producer.sendActivationMessage) {
     await kafkaProducer.send({
-      topic: "text",
+      topic: kafkaConfig.producer.topic,
       messages: [
         {
           value: "The node kafka producer is active"
