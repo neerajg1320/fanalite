@@ -44,7 +44,6 @@ function App() {
       } catch(e) {
         console.log("App: useEffect(): exception:", e.message)
       }
-      
     }
   }, [])
 
@@ -62,7 +61,7 @@ function App() {
         of them to render at a time
       */}
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Dashboard} />
         <Route path="/signin" component={SigninForm} />
         <Route path="/signup" component={SignupForm} />
         <PrivateRoute path="/dashboard" component={Dashboard} />

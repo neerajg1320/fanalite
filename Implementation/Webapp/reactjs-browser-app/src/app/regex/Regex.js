@@ -27,7 +27,7 @@ function Regex() {
 
     useEffect(() => {
         refreshList();
-    }, []);
+    }, [authTokens]);
 
     const refreshList = () => {
         getRegexList();
@@ -52,6 +52,8 @@ function Regex() {
             })
         } if (config.backend.selected === "fanalite-server") {
             const getRegexListServer = async () => {
+                // console.log("getRegexList: authTokens:", authTokens);
+
                 const regexList = [];
                 const response = await axios.get(config.server.resources.rules,
                     {
@@ -74,7 +76,9 @@ function Regex() {
                 setRegexList(regexList);
             };
 
-            getRegexListServer();
+            if (authTokens) {
+                getRegexListServer();
+            }
         }
     }
   
