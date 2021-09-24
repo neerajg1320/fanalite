@@ -62,7 +62,7 @@ function Regex() {
                     console.log("item:", list[item]);
                     const title = list[item].title;
                     const regex = list[item].regex;
-                    const id = list[item]
+                    const id = list[item].id;
                     const datetime = 'NA';
 
                     regexList.push({id, title, regex, datetime});
@@ -99,6 +99,7 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
+                getRegexList();
             };
 
             addRegexServer();
@@ -107,8 +108,7 @@ function Regex() {
       // Check if we can declare successful addition.
       setTitle('');
       setRegex('');
-      getRegexList();
-    }
+    };
   
     const deleteRegex = (id) => {
         if (config.backend.selected === "firebase") {
@@ -116,7 +116,7 @@ function Regex() {
         } else if (config.backend.selected === "fanalite-server") {
             console.log("Delete Regex: ", id);
             const deleteRegexServer = async () => {
-                const response = await axios.delete(config.server.resources.rules + "/" + id._id,
+                const response = await axios.delete(config.server.resources.rules + "/" + id,
                     {
                         headers: {
                             'Authorization': `Bearer ${authTokens.accessToken}`
@@ -124,12 +124,12 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
+                getRegexList();
             };
 
             deleteRegexServer();
         }
-        getRegexList();
-    }
+    };
   
 
     const editRegex = () => {
@@ -155,13 +155,13 @@ function Regex() {
                     });
 
                 console.log("response.data:", response.data);
+                getRegexList();
             };
 
             updateRegexServer();
         }
 
         setOpen(false);
-        getRegexList();
     };
 
 
