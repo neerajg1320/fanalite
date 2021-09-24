@@ -7,6 +7,7 @@ module.exports = (options = {}) => {
     const { app, data } = context;
 
     const kafkaConfig = app.get('kafka');
+    const debug = app.get('debug');
 
     if (!kafkaConfig.active) {
       return;
@@ -14,16 +15,20 @@ module.exports = (options = {}) => {
 
     const kafkaProducer = app.get('kafkaProducer');
 
-    await kafkaProducer.send({
-      topic: "messages",
-      messages: [
-        {
-          value: data.text
-        }
-      ]
-    });
+    if (kafkaProducer) {
+      await kafkaProducer.send({
+        topic: kafkaConfig.producer.topic,
+        messages: [
+          {
+            value: data.text
+          }
+        ]
+      });
 
-    console.log('kafka hook: kafka message sent');
+      if(debug.kafka) {
+        console.log('kafka hook: kafka message sent');
+      }
+    }
 
     return context;
   };

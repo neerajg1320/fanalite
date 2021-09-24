@@ -4,6 +4,7 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
+    //console.log('populate-user');
 
     // Get `app`, `method`, `params` and `result` from the hook context
     const { app, method, result, params } = context;

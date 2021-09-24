@@ -1,4 +1,6 @@
 module.exports = function(app) {
+  const debug = app.get('debug');
+
   if(typeof app.channel !== 'function') {
     // If no real-time functionality has been configured just return
     return;
@@ -41,7 +43,9 @@ module.exports = function(app) {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
 
-    console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
+    if (debug.channels) {
+      console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
+    }
 
     // e.g. to publish all service events to all authenticated users use
     return app.channel('authenticated');

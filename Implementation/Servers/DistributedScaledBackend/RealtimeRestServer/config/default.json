@@ -7,7 +7,9 @@
     "max": 50
   },
   "debug": {
-    "api": true
+    "channels": false,
+    "api": false,
+    "kafka": false
   },
   "authentication": {
     "entity": "user",
