@@ -32,11 +32,13 @@ function Regex() {
             email: user,
             password
         }).then(result => {
-            console.log("Login Success:", result.status);
-            // console.log("result.data:", result.data);
-
             if (result.status === 201) {
+                if (config.debug.active) {
+                    console.log("Login Success:", result.status);
+                }
                 setAuthTokens(result.data);
+            } else {
+                console.log("Login Failed:", result.status);
             }
         }).catch(e => {
             console.log("exception:", e.message)
@@ -45,14 +47,21 @@ function Regex() {
 
     // When
     useEffect(() => {
-        postNodeServerLogin("system@abc.com", "System123");
+
     }, []);
 
     useEffect(() => {
-        console.log("useEffect[authTokens]: authTokens", authTokens);
+        if (config.debug.active) {
+            console.log("Regex: useEffect[authTokens]: authTokens", authTokens);
+        }
 
         if (authTokens) {
-            refreshList();
+            if (authTokens === "invalid") {
+                postNodeServerLogin("system@abc.com", "System123");
+            } else {
+                refreshList();
+            }
+
         }
     }, [authTokens]);
 
@@ -82,25 +91,34 @@ function Regex() {
                 // console.log("getRegexList: authTokens:", authTokens);
 
                 const regexList = [];
-                const response = await axios.get(config.server.resources.rules,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${authTokens.accessToken}`
+
+                try {
+                    const response = await axios.get(config.server.resources.rules,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${authTokens.accessToken}`
+                            }
+                        });
+                    if (config.debug.active) {
+                        console.log(response.data);
+                    }
+                    const list = response.data.data;
+                    for (let item in list) {
+                        if (config.debug.active) {
+                            console.log("item:", list[item]);
                         }
-                    });
+                        const title = list[item].title;
+                        const regex = list[item].regex;
+                        const id = list[item].id;
+                        const datetime = 'NA';
 
-                console.log(response.data);
-                const list = response.data.data;
-                for (let item in list) {
-                    console.log("item:", list[item]);
-                    const title = list[item].title;
-                    const regex = list[item].regex;
-                    const id = list[item].id;
-                    const datetime = 'NA';
-
-                    regexList.push({id, title, regex, datetime});
+                        regexList.push({id, title, regex, datetime});
+                    }
+                    setRegexList(regexList);
+                } catch (e) {
+                    console.log(e.message);
+                    setAuthTokens("invalid");
                 }
-                setRegexList(regexList);
             };
 
             if (authTokens) {

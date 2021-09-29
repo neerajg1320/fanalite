@@ -21,7 +21,7 @@ import MainNavigation from './pages/MainNavigation';
 
 function App() {
   const [authToken, setAuthToken] = useState();
-  const [localActive, setLocalStorage] = useState(false);
+  const [localActive, setLocalStorage] = useState(true);
 
   const getTokenFromLocalStorage = () => {
     return localStorage.getItem("token");
