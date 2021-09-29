@@ -9,11 +9,9 @@ import {
 
 import './App.css';
 
-import Login from './authentication/Login';
+
 import Dashboard from './pages/Dashboard';
 import About from './pages/About';
-import LoginUser from './authentication/LoginUser';
-import Home from './pages/Home';
 
 import { AuthContext } from './authentication/AuthContext';
 import PrivateRoute from './PrivateRoute';
@@ -22,33 +20,47 @@ import SignupForm from './authentication/SignupForm';
 import MainNavigation from './pages/MainNavigation';
 
 function App() {
-  const [authTokens, setAuthTokens] = useState();
-  const setTokens = (data) => {
-    if (data) {
-      localStorage.setItem("tokens", JSON.stringify(data));
-    } else {
-      localStorage.removeItem("tokens");
+  const [authToken, setAuthToken] = useState();
+  const [localActive, setLocalStorage] = useState(false);
+
+  const getTokenFromLocalStorage = () => {
+    return localStorage.getItem("token");
+  };
+
+  const setTokenToLocalStorage = (data) => {
+    if (localActive) {
+        if (data) {
+            localStorage.setItem("token", JSON.stringify(data));
+        } else {
+            localStorage.removeItem("token");
+        }
     }
-    setAuthTokens(data);
-  }
+
+    setAuthToken(data);
+  };
+
+  const setupTokenFromLocalStorage = () => {
+      const tokensJsonStr = getTokenFromLocalStorage();
+
+      console.log("App: useEffect(): tokensJsonStr:", tokensJsonStr)
+      if (tokensJsonStr) {
+          try {
+              const token = JSON.parse(tokensJsonStr);
+              console.log("App: useEffect(): token:", token)
+              setAuthToken(token);
+
+          } catch(e) {
+              console.log("App: useEffect(): exception:", e.message)
+          }
+      }
+  };
 
   useEffect(() => {
-    const tokensJsonStr = localStorage.getItem("tokens");
-    console.log("App: useEffect(): tokensJsonStr:", tokensJsonStr)
-    if (tokensJsonStr) {
-      try {
-        const tokens = JSON.parse(tokensJsonStr);
-        console.log("App: useEffect(): tokens:", tokens)
-        setAuthTokens(tokens);
-
-      } catch(e) {
-        console.log("App: useEffect(): exception:", e.message)
-      }
-    }
-  }, [])
+    setupTokenFromLocalStorage();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{authTokens, setAuthTokens: setTokens}}>
+    <AuthContext.Provider value={{authTokens: authToken, setAuthTokens: setTokenToLocalStorage}}>
     <Router>
     <div>
       <MainNavigation />

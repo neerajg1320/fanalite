@@ -25,8 +25,35 @@ function Regex() {
 
     const { authTokens, setAuthTokens } = useAuth();
 
+    // Need to extract this code and put in its own file
+    function postNodeServerLogin(user, password) {
+        axios.post(config.server.login, {
+            strategy: "local",
+            email: user,
+            password
+        }).then(result => {
+            console.log("Login Success:", result.status);
+            // console.log("result.data:", result.data);
+
+            if (result.status === 201) {
+                setAuthTokens(result.data);
+            }
+        }).catch(e => {
+            console.log("exception:", e.message)
+        })
+    }
+
+    // When
     useEffect(() => {
-        refreshList();
+        postNodeServerLogin("system@abc.com", "System123");
+    }, []);
+
+    useEffect(() => {
+        console.log("useEffect[authTokens]: authTokens", authTokens);
+
+        if (authTokens) {
+            refreshList();
+        }
     }, [authTokens]);
 
     const refreshList = () => {
