@@ -22,14 +22,19 @@ module.exports = async function (app) {
 
         // Currently our user is hardcoded.
         // We should get the userId passed by Kafka message
-        const user = await app.service('users').get("fLKIsojaMeRzKfo7", {});
 
-        if (user) {
-          delete user.password;
-          const messageService = app.service('messages');
-          const params = {user, text: data.message.value.toString("utf-8")};
+        try {
+          const user = await app.service('users').get(kafkaConfig.user_id, {});
 
-          messageService.emit('kafkaTransaction', params);
+          if (user) {
+            delete user.password;
+            const messageService = app.service('messages');
+            const params = {user, text: data.message.value.toString("utf-8")};
+
+            messageService.emit('kafkaTransaction', params);
+          }
+        } catch (e) {
+          console.log(e.message);
         }
       }
     });
