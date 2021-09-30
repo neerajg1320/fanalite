@@ -45,12 +45,15 @@ function Regex() {
         })
     }
 
+
+
     // When
     useEffect(() => {
 
     }, []);
 
     useEffect(() => {
+
         if (config.debug.active) {
             console.log("Regex: useEffect[authTokens]: authTokens", authTokens);
         }
@@ -63,6 +66,7 @@ function Regex() {
             }
 
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authTokens]);
 
     const refreshList = () => {
@@ -117,6 +121,7 @@ function Regex() {
                     setRegexList(regexList);
                 } catch (e) {
                     console.log(e.message);
+
                     setAuthTokens("invalid");
                 }
             };

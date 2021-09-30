@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link,
-  Redirect
+  Route
 } from "react-router-dom";
 
 import './App.css';
@@ -19,9 +17,14 @@ import SigninForm from './authentication/SigninForm';
 import SignupForm from './authentication/SignupForm';
 import MainNavigation from './pages/MainNavigation';
 
+import config from './config/default';
+
+
 function App() {
   const [authToken, setAuthToken] = useState();
-  const [localActive, setLocalStorage] = useState(true);
+
+  // eslint-disable-next-line no-unused-vars
+  const [localActive, setLocalActive] = useState(true);
 
   const getTokenFromLocalStorage = () => {
     return localStorage.getItem("token");
@@ -39,23 +42,31 @@ function App() {
     setAuthToken(data);
   };
 
-  const setupTokenFromLocalStorage = () => {
-      const tokensJsonStr = getTokenFromLocalStorage();
 
-      console.log("App: useEffect(): tokensJsonStr:", tokensJsonStr)
-      if (tokensJsonStr) {
-          try {
-              const token = JSON.parse(tokensJsonStr);
-              console.log("App: useEffect(): token:", token)
-              setAuthToken(token);
-
-          } catch(e) {
-              console.log("App: useEffect(): exception:", e.message)
-          }
-      }
-  };
 
   useEffect(() => {
+      const setupTokenFromLocalStorage = () => {
+          const tokensJsonStr = getTokenFromLocalStorage();
+
+          if (config.debug.active) {
+              console.log("App: useEffect(): tokensJsonStr:", tokensJsonStr)
+          }
+
+          if (tokensJsonStr) {
+              try {
+                  const token = JSON.parse(tokensJsonStr);
+                  if (config.debug.active) {
+                      console.log("App: useEffect(): token:", token);
+                  }
+                  setAuthToken(token);
+
+              } catch(e) {
+                  console.log("App: useEffect(): exception:", e.message);
+              }
+          } else {
+              setAuthToken("invalid");
+          }
+      };
     setupTokenFromLocalStorage();
   }, []);
 

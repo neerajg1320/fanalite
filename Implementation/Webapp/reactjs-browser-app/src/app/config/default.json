@@ -1,6 +1,6 @@
 {
     "debug": {
-      "active": true
+      "active": false
     },
     "backend": {
       "options": ["stub-server", "firebase", "fanalite-server"],
